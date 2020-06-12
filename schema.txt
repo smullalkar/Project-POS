@@ -1,0 +1,80 @@
+CREATE TABLE user(id int NOT NULL AUTO_INCREMENT, username VARCHAR(255), address VARCHAR(255), contact VARCHAR(10), email VARCHAR(255), password VARCHAR(255), PRIMARY KEY (id));
+
+user;
++----------+--------------+------+-----+---------+----------------+
+| Field    | Type         | Null | Key | Default | Extra          |
++----------+--------------+------+-----+---------+----------------+
+| id       | int          | NO   | PRI | NULL    | auto_increment |
+| username | varchar(255) | YES  |     | NULL    |                |
+| address  | varchar(255) | YES  |     | NULL    |                |
+| contact  | varchar(10)  | YES  |     | NULL    |                |
+| email    | varchar(255) | YES  |     | NULL    |                |
+| password | varchar(255) | YES  |     | NULL    |                |
++----------+--------------+------+-----+---------+----------------+
+
+
+CREATE TABLE category(id int NOT NULL AUTO_INCREMENT,name VARCHAR(255),isavailable BOOLEAN, user_id int, PRIMARY KEY (id), FOREIGN KEY(user_id) REFERENCES user(id));
+
+category;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| name        | varchar(255) | YES  |     | NULL    |                |
+| isavailable | tinyint(1)   | YES  |     | NULL    |                |
+| user_id     | int          | YES  | MUL | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+
+CREATE TABLE stock(id int NOT NULL AUTO_INCREMENT,supplier_id int, item_code VARCHAR(255), item_name VARCHAR(255), price_per_unit_purchased int, price_per_unit_selling int, category_id int, isavailable BOOLEAN, user_id int, tax int, PRIMARY KEY (id), FOREIGN KEY(supplier_id) REFERENCES supplier(id), FOREIGN KEY(category_id) REFERENCES category(id), FOREIGN KEY(user_id) REFERENCES user(id));
+
+stock:
++--------------------------+--------------+------+-----+---------+----------------+
+| Field                    | Type         | Null | Key | Default | Extra          |
++--------------------------+--------------+------+-----+---------+----------------+
+| id                       | int          | NO   | PRI | NULL    | auto_increment |
+| supplier_id              | int          | YES  | MUL | NULL    |                |
+| item_code                | varchar(255) | YES  |     | NULL    |                |
+| item_name                | varchar(255) | YES  |     | NULL    |                |
+| price_per_unit_purchased | int          | YES  |     | NULL    |                |
+| price_per_unit_selling   | int          | YES  |     | NULL    |                |
+| category_id              | int          | YES  | MUL | NULL    |                |
+| isavailable              | tinyint(1)   | YES  |     | NULL    |                |
+| user_id                  | int          | YES  | MUL | NULL    |                |
+| tax                      | int          | YES  |     | NULL    |                |
++--------------------------+--------------+------+-----+---------+----------------+
+
+CREATE TABLE expenses(id int NOT NULL AUTO_INCREMENT,amount VARCHAR(255),stock_id int, PRIMARY KEY (id), FOREIGN KEY(stock_id) REFERENCES stock(id));
+
+expenses;
++----------+--------------+------+-----+---------+----------------+
+| Field    | Type         | Null | Key | Default | Extra          |
++----------+--------------+------+-----+---------+----------------+
+| id       | int          | NO   | PRI | NULL    | auto_increment |
+| amount   | varchar(255) | YES  |     | NULL    |                |
+| stock_id | int          | YES  | MUL | NULL    |                |
++----------+--------------+------+-----+---------+----------------+
+
+CREATE TABLE customer(id int NOT NULL AUTO_INCREMENT,name VARCHAR(255), contact VARCHAR(10), email VARCHAR(255), PRIMARY KEY (id));
+
+customer;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| id      | int          | NO   | PRI | NULL    | auto_increment |
+| name    | varchar(255) | YES  |     | NULL    |                |
+| contact | varchar(10)  | YES  |     | NULL    |                |
+| email   | varchar(255) | YES  |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
+
+CREATE TABLE bill(id int NOT NULL AUTO_INCREMENT,amount VARCHAR(255),customer_id int, created_at DATETIME, user_id int, PRIMARY KEY (id), FOREIGN KEY(customer_id) REFERENCES customer(id), FOREIGN KEY(user_id) REFERENCES user(id));
+
+bill;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| amount      | varchar(255) | YES  |     | NULL    |                |
+| customer_id | int          | YES  | MUL | NULL    |                |
+| created_at  | datetime     | YES  |     | NULL    |                |
+| user_id     | int          | YES  | MUL | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
