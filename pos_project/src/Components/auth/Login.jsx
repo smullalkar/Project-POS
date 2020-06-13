@@ -19,7 +19,7 @@ class Login extends Component {
     }
 
     render() {
-        const {loginUser} = this.props
+        const {loginUser,history,message} = this.props
         return (
             <div className='p-5 m-5'>
                 <form
@@ -27,6 +27,9 @@ class Login extends Component {
                     onSubmit={(e) => {
                         e.preventDefault()
                         loginUser(this.state)
+                        setTimeout(()=>{
+                            history.push('/')
+                        },200)
                     }}
                 >
                     <div className="form-group">
@@ -62,9 +65,10 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('loginData', state.loginData)
+    console.log('loginData', state.loginData.data)
     return {
-        loginData : state.loginData
+        loginData : state.loginData,
+        message : state.loginData.message
     };
 };
 const mapDispatchToProps = dispatch => {
