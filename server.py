@@ -30,19 +30,6 @@ def user_table():
     
     return 'User Table added'
 
-# @app.route('/users/listing')
-# def userList():
-#     csv_file = open('data/users.csv', 'r')
-#     csvreader = csv.DictReader(csv_file)
-
-#     rows = []
-#     for row in csvreader:
-#         rows.append(row)
-#     print(rows)
-
-#     csv_file.close()
-#     return json.dumps(rows)
-
 # Registeration for a new user
 @app.route("/user/register", methods = ["POST"])
 def create():
@@ -60,82 +47,6 @@ def create():
 
     return json.dumps({"user_added": True, "message": "registeration successful"})    
 
-# @app.route('/users/show/<id>')
-# def show(id):
-#     target = id
-#     csv_file = open('data/users.csv','r')
-#     csvreader = csv.DictReader(csv_file)
-    
-#     user_data = []
-    
-#     for row in csvreader:
-#         if row['id'] == target:
-#             user_data.append(row)
-            
-#     return json.dumps(user_data)
-
-# @app.route('/users/edit/<id>', methods=['POST'])
-# def edit(id):    
-    
-#     name = request.json["name"]
-#     email = request.json["email"]
-#     mobile = request.json["mobile"]
-#     age = request.json["age"]    
-#     password = request.json["password"]    
-#     role = request.json["role"]    
-#     username = request.json["username"]    
-#     data = {
-#         "id": id,
-#         "name": name,
-#         "email": email,
-#         "mobile": mobile,
-#         "age": age,
-#         "password": password,
-#         "role": role,
-#         "username": username,
-#     }
-    
-#     csv_file = open('data/users.csv','r')
-#     csvreader = csv.DictReader(csv_file)     
-    
-#     target = id   
-#     new_data = []    
-       
-#     for i in csvreader:
-#         if id == i['id']:
-#             new_data.append(data)
-#         else:
-#             new_data.append(i)
-#     csv_file.close() 
-       
-#     csv_file = open("data/users.csv", "w")    
-#     header = new_data[0].keys()    
-#     write_data = csv.DictWriter(csv_file, fieldnames=header)    
-#     write_data.writeheader()
-#     write_data.writerows(new_data)    
-#     csv_file.close()    
-#     return json.dumps(new_data)
-
-# @app.route('/users/delete/<id>', methods=['POST'])
-# def delete(id):
-#     target = id    
-#     new_data = []    
-#     csv_file = open("data/users.csv", "r")    
-#     csvreader = csv.DictReader(csv_file)    
-#     for i in csvreader:
-#         if i['id'] == id:
-#             pass
-#         else:
-#             new_data.append(i)
-#     csv_file.close() 
-       
-#     csv_file = open("data/users.csv", "w")    
-#     header = new_data[0].keys()   
-#     write_data = csv.DictWriter(csv_file, fieldnames=header)    
-#     write_data.writeheader()
-#     write_data.writerows(new_data)   
-#     csv_file.close()    
-#     return json.dumps({"data": str(new_data), "response":"user successfully deleted"})
 
 # login of existing users
 @app.route('/user/login', methods=['POST'])

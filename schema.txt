@@ -74,3 +74,15 @@ bill;
 | created_at  | datetime     | YES  |     | NULL    |                |
 | user_id     | int          | YES  | MUL | NULL    |                |
 +-------------+--------------+------+-----+---------+----------------+
+
+@app.route('/add/customer')
+def ADD():
+        
+    for i in data:
+        cur = mysql.connection.cursor()
+
+        cur.execute('''INSERT INTO bill(amount,customer_id,created_at,user_id) VALUES ("%s","%s","%s","%s");'''%(i['amonut'],i['customer_id'],i['date'],i['user_id']))
+        mysql.connection.commit()
+        cur.close()
+
+    return 'customer added'
