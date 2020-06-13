@@ -44,7 +44,7 @@ export const registerUser = (payload) => {
     return dispatch => {
         dispatch(regUserReq());
         return axios
-            .post(`http://127.0.0.1:5000/users/create`,
+            .post(`http://127.0.0.1:5000/user/register`,
                 {
                     uname : payload.uname,
                     address : payload.address,
@@ -63,9 +63,9 @@ export const registerUser = (payload) => {
 export const loginUser = (payload) => dispatch => {
     console.log('login details', payload)
     dispatch(logUserReq(payload))
-    return axios.post("http://127.0.0.1:5000/login", {
-        password: payload.password,
-        username: payload.username
+    return axios.post("http://127.0.0.1:5000/user/login", {
+        email: payload.email,
+        password: payload.password
     })
         .then(res => res.data?.auth_token)
         .then(res => axios.post("http://127.0.0.1:5000/auth_check", {
