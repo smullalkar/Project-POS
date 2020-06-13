@@ -12,22 +12,19 @@ user;
 | password | varchar(255) | YES  |     | NULL    |                |
 +----------+--------------+------+-----+---------+----------------+
 
+CREATE TABLE supplier(id int NOT NULL AUTO_INCREMENT,name VARCHAR(255),address VARCHAR(255), contact VARCHAR(10), PRIMARY KEY (id));
+supplier;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| id      | int          | NO   | PRI | NULL    | auto_increment |
+| name    | varchar(255) | YES  |     | NULL    |                |
+| address | varchar(255) | YES  |     | NULL    |                |
+| contact | varchar(10)  | YES  |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
 
-CREATE TABLE category(id int NOT NULL AUTO_INCREMENT,name VARCHAR(255),isavailable BOOLEAN, user_id int, PRIMARY KEY (id), FOREIGN KEY(user_id) REFERENCES user(id));
-
-category;
-+-------------+--------------+------+-----+---------+----------------+
-| Field       | Type         | Null | Key | Default | Extra          |
-+-------------+--------------+------+-----+---------+----------------+
-| id          | int          | NO   | PRI | NULL    | auto_increment |
-| name        | varchar(255) | YES  |     | NULL    |                |
-| isavailable | tinyint(1)   | YES  |     | NULL    |                |
-| user_id     | int          | YES  | MUL | NULL    |                |
-+-------------+--------------+------+-----+---------+----------------+
-
-CREATE TABLE stock(id int NOT NULL AUTO_INCREMENT,supplier_id int, item_code VARCHAR(255), item_name VARCHAR(255), price_per_unit_purchased int, price_per_unit_selling int, category_id int, isavailable BOOLEAN, user_id int, tax int, PRIMARY KEY (id), FOREIGN KEY(supplier_id) REFERENCES supplier(id), FOREIGN KEY(category_id) REFERENCES category(id), FOREIGN KEY(user_id) REFERENCES user(id));
-
-stock:
+CREATE TABLE stock(id int NOT NULL AUTO_INCREMENT,supplier_id int, item_code VARCHAR(255), item_name VARCHAR(255), price_per_unit_purchased int, price_per_unit_selling int, isavailable BOOLEAN, user_id int, tax int, PRIMARY KEY (id), FOREIGN KEY(supplier_id) REFERENCES supplier(id), FOREIGN KEY(user_id) REFERENCES user(id));
+stock;
 +--------------------------+--------------+------+-----+---------+----------------+
 | Field                    | Type         | Null | Key | Default | Extra          |
 +--------------------------+--------------+------+-----+---------+----------------+
@@ -37,7 +34,6 @@ stock:
 | item_name                | varchar(255) | YES  |     | NULL    |                |
 | price_per_unit_purchased | int          | YES  |     | NULL    |                |
 | price_per_unit_selling   | int          | YES  |     | NULL    |                |
-| category_id              | int          | YES  | MUL | NULL    |                |
 | isavailable              | tinyint(1)   | YES  |     | NULL    |                |
 | user_id                  | int          | YES  | MUL | NULL    |                |
 | tax                      | int          | YES  |     | NULL    |                |

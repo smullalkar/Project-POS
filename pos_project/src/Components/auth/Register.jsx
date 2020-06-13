@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { registerUser } from '../../Redux/Actions';
+import { connect } from "react-redux";
 
-export default class Register extends Component {
+class Register extends Component {
     constructor(props) {
         super(props)
 
@@ -20,13 +22,21 @@ export default class Register extends Component {
     }
 
     render() {
+        const { registerUser } = this.props
         return (
             <div className='p-5 m-5'>
                 <form
                     className='col-4 offset-4'
                     onSubmit={(e) => {
                         e.preventDefault()
-                        //RegisternUser(this.state)
+                        registerUser(this.state)
+                        this.setState({
+                            uname: '',
+                            address: '',
+                            contact: '',
+                            email: '',
+                            password: ''
+                        })
                     }}
                 >
                     <div className="form-group">
@@ -90,3 +100,19 @@ export default class Register extends Component {
         )
     }
 }
+
+const mapStateToProps = state => {
+    console.log('Regisetered ?', state.response)
+    return {
+        response: state.response
+    };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        registerUser: a => dispatch(registerUser(a))
+    };
+};
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Register);

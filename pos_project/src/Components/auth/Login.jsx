@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
+import { loginUser } from '../../Redux/Actions';
+import { connect } from "react-redux";
 
-export default class Login extends Component {
+class Login extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            password: '',
-            email: ''
+            email: '',
+            password: ''
         }
     }
 
@@ -17,13 +19,14 @@ export default class Login extends Component {
     }
 
     render() {
+        const {loginUser} = this.props
         return (
             <div className='p-5 m-5'>
                 <form
                     className='col-4 offset-4'
                     onSubmit={(e) => {
                         e.preventDefault()
-                        // loginUser(this.state)
+                        loginUser(this.state)
                     }}
                 >
                     <div className="form-group">
@@ -57,3 +60,19 @@ export default class Login extends Component {
         )
     }
 }
+
+const mapStateToProps = state => {
+    console.log('loginData', state.loginData)
+    return {
+        loginData : state.loginData
+    };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        loginUser: a => dispatch(loginUser(a))
+    };
+};
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Login);
