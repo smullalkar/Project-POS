@@ -63,10 +63,10 @@ def user_customers(email):
         data.append(row)
     return json.dumps(data, default=str)
 
-@app.route('/user/supplier')
-def user_supplier():
+@app.route('/user/supplier/<user_email>')
+def user_supplier(user_email):
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT * FROM supplier;''')
+    cur.execute('''select s.id, s.name, s.address, s.contact from user_supplier as us JOIN user as u on us.user_id = u.id JOIN supplier as s on us.supplier_id=s.id WHERE u.email = '%s';'''%(user_email))
     result = cur.fetchall()
     data = []
     for row in result:
@@ -90,82 +90,22 @@ def create():
 
     return json.dumps({"user_added": True, "message": "registeration successful"})    
 
-# @app.route('/users/show/<id>')
-# def show(id):
-#     target = id
-#     csv_file = open('data/users.csv','r')
-#     csvreader = csv.DictReader(csv_file)
+# @app.route("/user/stock/add/<user_email>", methods = ["POST"])
+# def addItemToStock():
+#     item_name = request.json["item_name"]
+#     ppu = request.json["ppu"]    
+#     spu = request.json["spu"]    
+#     qty = request.json["qty"]
+#     tax = request.json["tax"]
+#     supplier = request.json['supplier']
     
-#     user_data = []
-    
-#     for row in csvreader:
-#         if row['id'] == target:
-#             user_data.append(row)
-            
-#     return json.dumps(user_data)
+#     cur = mysql.connection.cursor()
 
-# @app.route('/users/edit/<id>', methods=['POST'])
-# def edit(id):    
-    
-#     name = request.json["name"]
-#     email = request.json["email"]
-#     mobile = request.json["mobile"]
-#     age = request.json["age"]    
-#     password = request.json["password"]    
-#     role = request.json["role"]    
-#     username = request.json["username"]    
-#     data = {
-#         "id": id,
-#         "name": name,
-#         "email": email,
-#         "mobile": mobile,
-#         "age": age,
-#         "password": password,
-#         "role": role,
-#         "username": username,
-#     }
-    
-#     csv_file = open('data/users.csv','r')
-#     csvreader = csv.DictReader(csv_file)     
-    
-#     target = id   
-#     new_data = []    
-       
-#     for i in csvreader:
-#         if id == i['id']:
-#             new_data.append(data)
-#         else:
-#             new_data.append(i)
-#     csv_file.close() 
-       
-#     csv_file = open("data/users.csv", "w")    
-#     header = new_data[0].keys()    
-#     write_data = csv.DictWriter(csv_file, fieldnames=header)    
-#     write_data.writeheader()
-#     write_data.writerows(new_data)    
-#     csv_file.close()    
-#     return json.dumps(new_data)
+#     cur.execute('''INSERT INTO user(username,address,contact,email,password) VALUES ("%s","%s","%s","%s","%s");'''%(username,address,contact,email,password))
+#     mysql.connection.commit()
+#     cur.close()
 
-# @app.route('/users/delete/<id>', methods=['POST'])
-# def delete(id):
-#     target = id    
-#     new_data = []    
-#     csv_file = open("data/users.csv", "r")    
-#     csvreader = csv.DictReader(csv_file)    
-#     for i in csvreader:
-#         if i['id'] == id:
-#             pass
-#         else:
-#             new_data.append(i)
-#     csv_file.close() 
-       
-#     csv_file = open("data/users.csv", "w")    
-#     header = new_data[0].keys()   
-#     write_data = csv.DictWriter(csv_file, fieldnames=header)    
-#     write_data.writeheader()
-#     write_data.writerows(new_data)   
-#     csv_file.close()    
-#     return json.dumps({"data": str(new_data), "response":"user successfully deleted"})
+#     return json.dumps({"user_added": True, "message": "registeration successful"})
 
 # login of existing users
 @app.route('/user/login', methods=['POST'])

@@ -1,12 +1,7 @@
 import React, { Component } from 'react'
-import { getCustomerData } from '../../Redux/Actions';
 import { connect } from "react-redux";
 
 class Customer extends Component {
-    componentDidMount = () => {
-        const { email } = this.props
-        this.props.getCustomerData(email)
-    }
     render() {
         const { customerData } = this.props
         return (
@@ -41,16 +36,15 @@ class Customer extends Component {
 const mapStateToProps = state => {
     console.log('customerData', state.customerData)
     return {
-        customerData: state.customerData,
-        email: state.loginData.data.email
+        customerData: state.customerData
     };
 };
-const mapDispatchToProps = dispatch => {
-    return {
-        getCustomerData: a => dispatch(getCustomerData(a))
-    };
-};
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         getCustomerData: a => dispatch(getCustomerData(a))
+//     };
+// };
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
+    // mapDispatchToProps
 )(Customer);

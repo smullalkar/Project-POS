@@ -28,8 +28,8 @@ class Login extends Component {
                         e.preventDefault()
                         loginUser(this.state)
                         setTimeout(()=>{
-                            history.push('/')
-                        },200)
+                            history.push('/home')
+                        },300)
                     }}
                 >
                     <div className="form-group">
@@ -48,7 +48,7 @@ class Login extends Component {
                             name='password'
                             value={this.state.password}
                             onChange={this.handleChange}
-                            type="text"
+                            type="password"
                             className="form-control"
                         />
                     </div>

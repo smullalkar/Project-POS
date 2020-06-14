@@ -4,8 +4,15 @@ import Suppliercard from './Suppliercard'
 import Customercard from './Customercard'
 import Billgenerator from './Billgenerator'
 import { connect } from "react-redux";
+import { geInventorytData, getSupplierData, getCustomerData } from '../../Redux/Actions';
 
 class Home extends Component {
+    componentDidMount = () => {
+        const { email } = this.props
+        this.props.geInventorytData(email)
+        this.props.getSupplierData(email)
+        this.props.getCustomerData(email)
+    }
     render() {
         const {isLoggedin} = this.props
         if(isLoggedin){
@@ -28,11 +35,6 @@ class Home extends Component {
                 </div>
             )
         }
-        else{
-            return(
-                <div>PLEASE LOGIN</div>
-            )
-        }
     }
 }
 
@@ -40,16 +42,19 @@ const mapStateToProps = state => {
     console.log("state :", state)
     return {
         isLoggedin: state.isLoggedin,
+        email: state.loginData.data.email
     };
 };
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         loginUser: a => dispatch(loginUser(a)),
-//     };
-// };
+const mapDispatchToProps = dispatch => {
+    return {
+        geInventorytData: a => dispatch(geInventorytData(a)),
+        getSupplierData: a => dispatch(getSupplierData(a)),
+        getCustomerData: a => dispatch(getCustomerData(a))
+    };
+};
 
 export default connect(
-    mapStateToProps
-    // mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Home);

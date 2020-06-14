@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import { registerUser } from '../../Redux/Actions';
+// import { registerUser } from '../../Redux/Actions';
 import { connect } from "react-redux";
 
-class Register extends Component {
+class AddStock extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            uname: '',
-            address: '',
-            contact: '',
-            email: '',
-            password: ''
+            item_name: '',
+            ppu: '',
+            spu: '',
+            qty: '',
+            tax: '',
+            supplier: ''
         }
     }
 
@@ -22,78 +23,91 @@ class Register extends Component {
     }
 
     render() {
-        const { registerUser } = this.props
+        const { supplierData } = this.props
         return (
             <div className='p-5 m-5'>
                 <form
-                    className='col-4 offset-4 needs-validation' 
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                        registerUser(this.state)
-                        this.setState({
-                            uname: '',
-                            address: '',
-                            contact: '',
-                            email: '',
-                            password: ''
-                        })
-                    }}
+                    className='col-4 offset-4 needs-validation'
+                // onSubmit={(e) => {
+                //     e.preventDefault()
+                //     registerUser(this.state)
+                //     this.setState({
+                //         item_name: '',
+                //         ppu: '',
+                //         spu: '',
+                //         qty: '',
+                //         tax: ''
+                //     })
+                // }}
                 >
                     <div className="form-group">
-                        <label>User name</label>
+                        <label>Item Name</label>
                         <input
                             required
-                            name='uname'
-                            value={this.state.uname}
+                            name='item_name'
+                            value={this.state.item_name}
                             onChange={this.handleChange}
                             type="text"
                             className="form-control"
                         />
                     </div>
                     <div className="form-group">
-                        <label>Address</label>
+                        <label>Purchased price per unit</label>
                         <input
                             required
-                            name='address'
-                            value={this.state.address}
+                            name='ppu'
+                            value={this.state.ppu}
                             onChange={this.handleChange}
                             type="text"
                             className="form-control"
                         />
                     </div>
                     <div className="form-group">
-                        <label>Contact number</label>
+                        <label>Selling price per unit</label>
                         <input
                             required
-                            name='contact'
-                            value={this.state.contact}
+                            name='spu'
+                            value={this.state.spu}
                             onChange={this.handleChange}
                             type="text"
                             className="form-control"
                         />
                     </div>
                     <div className="form-group">
-                        <label>Email</label>
+                        <label>Quantity</label>
                         <input
                             required
-                            name='email'
-                            value={this.state.email}
+                            name='qty'
+                            value={this.state.qty}
                             onChange={this.handleChange}
                             type="text"
                             className="form-control"
                         />
                     </div>
                     <div className="form-group">
-                        <label>Password</label>
+                        <label>tax</label>
                         <input
                             required
-                            name='password'
-                            value={this.state.password}
+                            name='tax'
+                            value={this.state.tax}
                             onChange={this.handleChange}
                             type="text"
                             className="form-control"
                         />
                     </div>
+                    <select
+                        class="custom-select"
+                        onChange={e =>
+                            this.setState({
+                                supplier: e.target.value
+                            })
+                        }
+                    >
+                        <option selected>Open this select menu</option>
+                        {
+                            supplierData.data && supplierData.data.map(sup => <option value={sup[1]}>{sup[1]}</option>)
+                        }
+                    </select>
                     <div className='d-flex justify-content-center'>
                         <button
                             type="submit"
@@ -110,17 +124,17 @@ class Register extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('Regisetered ?', state.response)
+    console.log('Addstock ', state.response)
     return {
-        response: state.response
+        supplierData: state.supplierData
     };
 };
-const mapDispatchToProps = dispatch => {
-    return {
-        registerUser: a => dispatch(registerUser(a))
-    };
-};
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         registerUser: a => dispatch(registerUser(a))
+//     };
+// };
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
-)(Register);
+    // mapDispatchToProps
+)(AddStock);

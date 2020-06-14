@@ -13,7 +13,10 @@ import {
     GET_CUSTOMER_FAIL,
     GET_SUPPLIER_REQ,
     GET_SUPPLIER_SUCCESS,
-    GET_SUPPLIER_FAIL
+    GET_SUPPLIER_FAIL,
+    ADDITEM_STOCK_REQ,
+    ADDITEM_STOCK_SUCCESS,
+    ADDITEM_STOCK_FAIL
 } from "./Actiontypes";
 
 import axios from 'axios'
@@ -93,6 +96,21 @@ export const getSupplierFail = payload => ({
     payload: payload
 })
 
+export const addItemToStockReq = payload => ({
+    type: ADDITEM_STOCK_REQ,
+    payload: payload
+})
+
+export const addItemToStockSuccess = payload => ({
+    type: ADDITEM_STOCK_SUCCESS,
+    payload: payload
+})
+
+export const addItemToStockFail = payload => ({
+    type: ADDITEM_STOCK_FAIL,
+    payload: payload
+})
+
 export const geInventorytData = (payload) => {
     return dispatch => {
         dispatch(getInventoryReq());
@@ -121,7 +139,7 @@ export const getSupplierData = (payload) => {
     return dispatch => {
         dispatch(getSupplierReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/supplier`)
+            .get(`http://127.0.0.1:5000/user/supplier/${payload}`)
             .then(res => {
                 return dispatch(getSupplierSuccess(res));
             })
@@ -136,10 +154,10 @@ export const registerUser = (payload) => {
         return axios
             .post(`http://127.0.0.1:5000/user/register`,
                 {
-                    uname : payload.uname,
-                    address : payload.address,
-                    contact : payload.contact,
-                    email : payload.email,
+                    uname: payload.uname,
+                    address: payload.address,
+                    contact: payload.contact,
+                    email: payload.email,
                     password: payload.password
                 }
             )
@@ -164,3 +182,24 @@ export const loginUser = (payload) => dispatch => {
         .then(res => dispatch(logUserSuccess(res)))
         .catch(err => dispatch(logUserFail(err)))
 }
+
+export const addItemToStock = (payload) => {
+    console.log(payload)
+    return dispatch => {
+        dispatch(addItemToStockReq());
+        return axios
+            .post(`http://127.0.0.1:5000/user/register`,
+                {
+                    item_name: payload.item_name,
+                    ppu: payload.ppu,
+                    spu: payload.spu,
+                    qty: payload.qty,
+                    tax: payload.tax
+                }
+            )
+            .then(res => {
+                return dispatch(addItemToStockSuccess(res));
+            })
+            .catch(err => dispatch(addItemToStockFail(err)));
+    };
+};

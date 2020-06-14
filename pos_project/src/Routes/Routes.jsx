@@ -6,16 +6,20 @@ import Register from '../Components/auth/Register';
 import StockInventory from '../Components/stock/StockInventory'
 import Supplier from '../Components/supplier/Supplier';
 import Customer from '../Components/customer/Customer';
+import AddStock from '../Components/stock/AddStock';
+import Homeredirect from '../Components/common/Homeredirect';
 
 export default class Routes extends Component {
     render() {
         return (
             <div>
                 <Switch>
-                    <Route exact path='/' component={Home}></Route>
+                    <Route path='/home' component={Home}></Route>
+                    <Route exact path='/' component={Homeredirect}></Route>
                     <Route path='/login' component={Login}></Route>
                     <Route path='/register' component={Register}></Route>
-                    <Route path='/user/stockinventory' component={StockInventory}></Route>
+                    <Route exact path='/user/stockinventory' component={StockInventory}></Route>
+                    <Route path='/user/stockinventory/add' component={AddStock}></Route>
                     <Route path='/user/supplier' component={Supplier}></Route>
                     <Route path='/user/customer' component={Customer}></Route>
                     {/* <Route path='/users/listing/show/:id' exact component={UserDetails}></Route>

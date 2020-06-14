@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
-import { getSupplierData } from '../../Redux/Actions';
 import { connect } from "react-redux";
 
 class Supplier extends Component {
-    componentDidMount = () => {
-        this.props.getSupplierData()
-    }
     render() {
         const { supplierData } = this.props
         return (
@@ -41,12 +37,12 @@ const mapStateToProps = state => {
         supplierData: state.supplierData
     };
 };
-const mapDispatchToProps = dispatch => {
-    return {
-        getSupplierData: a => dispatch(getSupplierData(a))
-    };
-};
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         getSupplierData: a => dispatch(getSupplierData(a))
+//     };
+// };
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
+    // mapDispatchToProps
 )(Supplier);

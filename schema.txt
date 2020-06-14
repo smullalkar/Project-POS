@@ -75,6 +75,19 @@ bill;
 | user_id     | int          | YES  | MUL | NULL    |                |
 +-------------+--------------+------+-----+---------+----------------+
 
+
+CREATE TABLE user_supplier(id int NOT NULL AUTO_INCREMENT,user_id int, supplier_id int, PRIMARY KEY (id), FOREIGN KEY(user_id)
+REFERENCES user(id), FOREIGN KEY(supplier_id) REFERENCES supplier(id));
+
+user_supplier;
++-------------+------+------+-----+---------+----------------+
+| Field       | Type | Null | Key | Default | Extra          |
++-------------+------+------+-----+---------+----------------+
+| id          | int  | NO   | PRI | NULL    | auto_increment |
+| user_id     | int  | YES  | MUL | NULL    |                |
+| supplier_id | int  | YES  | MUL | NULL    |                |
++-------------+------+------+-----+---------+----------------+
+
 @app.route('/add/customer')
 def ADD():
         
