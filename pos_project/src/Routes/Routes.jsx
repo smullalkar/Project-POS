@@ -5,6 +5,7 @@ import Login from '../Components/auth/Login';
 import Register from '../Components/auth/Register';
 import StockInventory from '../Components/stock/StockInventory'
 import Supplier from '../Components/supplier/Supplier';
+import Addsupplier from '../Components/supplier/Addsupplier';
 import Customer from '../Components/customer/Customer';
 import AddStock from '../Components/stock/AddStock';
 import Homeredirect from '../Components/common/Homeredirect';
@@ -20,7 +21,8 @@ export default class Routes extends Component {
                     <Route path='/register' component={Register}></Route>
                     <Route exact path='/user/stockinventory' component={StockInventory}></Route>
                     <Route path='/user/stockinventory/add' component={AddStock}></Route>
-                    <Route path='/user/supplier' component={Supplier}></Route>
+                    <Route exact path='/user/supplier' component={Supplier}></Route>
+                    <Route path='/user/supplier/add' component={Addsupplier}></Route>
                     <Route path='/user/customer' component={Customer}></Route>
                     {/* <Route path='/users/listing/show/:id' exact component={UserDetails}></Route>
                     <Route path='/users/listing/show/:id/edit/:id' component={EditUser}></Route>

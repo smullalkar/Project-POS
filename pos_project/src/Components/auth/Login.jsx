@@ -8,7 +8,8 @@ class Login extends Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            wrong_pass: false
         }
     }
 
@@ -18,8 +19,17 @@ class Login extends Component {
         })
     }
 
+    componentDidUpdate = () => {
+        setTimeout(() => {
+            if(this.props.isLoggedin){
+                this.props.history.push('/home')
+            }
+        }, 300)
+    }
+
     render() {
-        const {loginUser,history,message} = this.props
+        const { loginUser, history, message, isLoggedin } = this.props
+        const {wrong_pass} = this.state
         return (
             <div className='p-5 m-5'>
                 <form
@@ -27,9 +37,6 @@ class Login extends Component {
                     onSubmit={(e) => {
                         e.preventDefault()
                         loginUser(this.state)
-                        setTimeout(()=>{
-                            history.push('/home')
-                        },300)
                     }}
                 >
                     <div className="form-group">
@@ -58,6 +65,9 @@ class Login extends Component {
                             className="btn btn-primary"
                         >Submit</button>
                     </div>
+                    {
+                        wrong_pass ? <div>INCORRECT USERNAME OR PASSWORD</div> : <></>
+                    }
                 </form>
             </div>
         )
@@ -65,10 +75,11 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('loginData', state.loginData.data)
+    console.log('loginData', state)
     return {
-        loginData : state.loginData,
-        message : state.loginData.message
+        loginData: state.loginData,
+        message: state.loginData.message,
+        isLoggedin: state.isLoggedin
     };
 };
 const mapDispatchToProps = dispatch => {

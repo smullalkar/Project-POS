@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
+import { geInventorytData } from '../../Redux/Actions';
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 
 class StockInventory extends Component {
+    componentDidMount = () => {
+        const { email } = this.props
+        this.props.geInventorytData(email)
+    }
     render() {
         const { inventoryData } = this.props
         return (
@@ -48,15 +53,16 @@ class StockInventory extends Component {
 const mapStateToProps = state => {
     console.log('inventoryData', state.inventoryData)
     return {
-        inventoryData: state.inventoryData
+        inventoryData: state.inventoryData,
+        email: state.loginData.data.email
     };
 };
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         geInventorytData: a => dispatch(geInventorytData(a))
-//     };
-// };
+const mapDispatchToProps = dispatch => {
+    return {
+        geInventorytData: a => dispatch(geInventorytData(a))
+    };
+};
 export default connect(
-    mapStateToProps
-    // mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(StockInventory);

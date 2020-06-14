@@ -42,7 +42,8 @@ const mapStateToProps = state => {
     console.log("state :", state)
     return {
         isLoggedin: state.isLoggedin,
-        email: state.loginData.data.email
+        email: state.loginData.data.email,
+        id: state.loginData.data.id
     };
 };
 

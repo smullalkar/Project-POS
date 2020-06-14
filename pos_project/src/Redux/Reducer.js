@@ -13,7 +13,16 @@ import {
     GET_CUSTOMER_FAIL,
     GET_SUPPLIER_REQ,
     GET_SUPPLIER_SUCCESS,
-    GET_SUPPLIER_FAIL
+    GET_SUPPLIER_FAIL,
+    ADDITEM_STOCK_REQ,
+    ADDITEM_STOCK_SUCCESS,
+    ADDITEM_STOCK_FAIL,
+    ADDSUPPLIER_REQ,
+    ADDSUPPLIER_SUCCESS,
+    ADDSUPPLIER_FAIL,
+    DELETESUPPLIER_REQ,
+    DELETESUPPLIER_SUCCESS,
+    DELETESUPPLIER_FAIL
 } from "./Actiontypes";
 
 export const initStore = {
@@ -30,6 +39,57 @@ export const initStore = {
 export default (state = initStore, action) => {
     console.log('action called', action.payload);
     switch (action.type) {
+        case ADDSUPPLIER_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case ADDSUPPLIER_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                supplierData: action.payload
+            };
+        case ADDSUPPLIER_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
+        case DELETESUPPLIER_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case DELETESUPPLIER_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                supplierData: action.payload
+            };
+        case DELETESUPPLIER_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
+        case ADDITEM_STOCK_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case ADDITEM_STOCK_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                inventoryData: action.payload
+            };
+        case ADDITEM_STOCK_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
         case GET_SUPPLIER_REQ:
             return {
                 ...state,

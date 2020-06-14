@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { registerUser } from '../../Redux/Actions';
+import { addItemToStock } from '../../Redux/Actions';
 import { connect } from "react-redux";
 
 class AddStock extends Component {
@@ -12,7 +12,8 @@ class AddStock extends Component {
             spu: '',
             qty: '',
             tax: '',
-            supplier: ''
+            supplier: '',
+            user_id: ''
         }
     }
 
@@ -22,23 +23,35 @@ class AddStock extends Component {
         })
     }
 
+    componentDidMount = () => {
+        const { id } = this.props
+        this.setState({
+            user_id: id
+        })
+    }
+
     render() {
-        const { supplierData } = this.props
+        const { supplierData, addItemToStock } = this.props
         return (
             <div className='p-5 m-5'>
                 <form
                     className='col-4 offset-4 needs-validation'
-                // onSubmit={(e) => {
-                //     e.preventDefault()
-                //     registerUser(this.state)
-                //     this.setState({
-                //         item_name: '',
-                //         ppu: '',
-                //         spu: '',
-                //         qty: '',
-                //         tax: ''
-                //     })
-                // }}
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        addItemToStock(this.state)
+                        setTimeout(() => {
+                            this.props.history.push('/user/stockinventory');
+                        }, 200);
+                        this.setState({
+                            item_name: '',
+                            ppu: '',
+                            spu: '',
+                            qty: '',
+                            tax: '',
+                            supplier: '',
+                            user_id: ''
+                        })
+                    }}
                 >
                     <div className="form-group">
                         <label>Item Name</label>
@@ -95,28 +108,36 @@ class AddStock extends Component {
                             className="form-control"
                         />
                     </div>
-                    <select
-                        class="custom-select"
-                        onChange={e =>
-                            this.setState({
-                                supplier: e.target.value
-                            })
-                        }
-                    >
-                        <option selected>Open this select menu</option>
-                        {
-                            supplierData.data && supplierData.data.map(sup => <option value={sup[1]}>{sup[1]}</option>)
-                        }
-                    </select>
-                    <div className='d-flex justify-content-center'>
+                    <div className="form-group">
+                        <select
+                            class="custom-select"
+                            onChange={e =>
+                                this.setState({
+                                    supplier: e.target.value
+                                })
+                            }
+                        >
+                            <option selected>Open this select menu</option>
+                            {
+                                supplierData.data && supplierData.data.map(sup => <option value={sup[0]}>{sup[1]}</option>)
+                            }
+                        </select>
+                    </div>
+                    <div className='d-flex justify-content-center my-3'>
                         <button
                             type="submit"
                             className="btn btn-primary"
-                        >Submit</button>
+                        >ADD</button>
                     </div>
-                    {/* {
-                        response && response === 200 ? <div>REGISTERATION SUCCESSFUL. PLEASE LOGIN</div> : <div></div>
-                    } */}
+                    <div className='d-flex justify-content-center'>
+                        <button
+                            onClick={(e) => {
+                                this.props.history.goBack()
+                            }}
+                            type='button'
+                            className="btn btn-primary"
+                        >CANCEL</button>
+                    </div>
                 </form>
             </div>
         )
@@ -126,15 +147,18 @@ class AddStock extends Component {
 const mapStateToProps = state => {
     console.log('Addstock ', state.response)
     return {
-        supplierData: state.supplierData
+        supplierData: state.supplierData,
+        email: state.loginData.data.email,
+        id: state.loginData.data.id
     };
 };
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         registerUser: a => dispatch(registerUser(a))
-//     };
-// };
+
+const mapDispatchToProps = dispatch => {
+    return {
+        addItemToStock: a => dispatch(addItemToStock(a))
+    };
+};
 export default connect(
     mapStateToProps,
-    // mapDispatchToProps
+    mapDispatchToProps
 )(AddStock);

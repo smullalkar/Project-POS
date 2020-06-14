@@ -16,7 +16,13 @@ import {
     GET_SUPPLIER_FAIL,
     ADDITEM_STOCK_REQ,
     ADDITEM_STOCK_SUCCESS,
-    ADDITEM_STOCK_FAIL
+    ADDITEM_STOCK_FAIL,
+    ADDSUPPLIER_REQ,
+    ADDSUPPLIER_SUCCESS,
+    ADDSUPPLIER_FAIL,
+    DELETESUPPLIER_REQ,
+    DELETESUPPLIER_SUCCESS,
+    DELETESUPPLIER_FAIL
 } from "./Actiontypes";
 
 import axios from 'axios'
@@ -111,6 +117,36 @@ export const addItemToStockFail = payload => ({
     payload: payload
 })
 
+export const addSupplierReq = payload => ({
+    type: ADDSUPPLIER_REQ,
+    payload: payload
+})
+
+export const addSupplierSuccess = payload => ({
+    type: ADDSUPPLIER_SUCCESS,
+    payload: payload
+})
+
+export const addSupplierFail = payload => ({
+    type: ADDSUPPLIER_FAIL,
+    payload: payload
+})
+
+export const deleteSupplierReq = payload => ({
+    type: DELETESUPPLIER_REQ,
+    payload: payload
+})
+
+export const deleteSupplierSuccess = payload => ({
+    type: DELETESUPPLIER_SUCCESS,
+    payload: payload
+})
+
+export const deleteSupplierFail = payload => ({
+    type: DELETESUPPLIER_FAIL,
+    payload: payload
+})
+
 export const geInventorytData = (payload) => {
     return dispatch => {
         dispatch(getInventoryReq());
@@ -188,13 +224,15 @@ export const addItemToStock = (payload) => {
     return dispatch => {
         dispatch(addItemToStockReq());
         return axios
-            .post(`http://127.0.0.1:5000/user/register`,
+            .post(`http://127.0.0.1:5000/user/stock/add`,
                 {
                     item_name: payload.item_name,
                     ppu: payload.ppu,
                     spu: payload.spu,
                     qty: payload.qty,
-                    tax: payload.tax
+                    tax: payload.tax,
+                    supplier: payload.supplier,
+                    user_id: payload.user_id
                 }
             )
             .then(res => {
@@ -203,3 +241,36 @@ export const addItemToStock = (payload) => {
             .catch(err => dispatch(addItemToStockFail(err)));
     };
 };
+
+export const addSupplier = (payload) => {
+    console.log(payload)
+    return dispatch => {
+        dispatch(addSupplierReq());
+        return axios
+            .post(`http://127.0.0.1:5000/user/supplier/add`,
+                {
+                    name: payload.name,
+                    address: payload.address,
+                    contact: payload.contact,
+                    user_id: payload.user_id
+                }
+            )
+            .then(res => {
+                return dispatch(addSupplierSuccess(res));
+            })
+            .catch(err => dispatch(addSupplierFail(err)));
+    };
+};
+
+export const deleteSupplier = (payload) => {
+    console.log('deletee payload', payload)
+    return dispatch => {
+        dispatch(deleteSupplierReq());
+        return axios
+            .get(`http://127.0.0.1:5000/user/supplier/delete/${payload}`)
+            .then(res => {
+                return dispatch(deleteSupplierSuccess(res));
+            })
+            .catch(err => dispatch(deleteSupplierFail(err)));
+    }
+}
