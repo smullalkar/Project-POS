@@ -22,7 +22,14 @@ import {
     ADDSUPPLIER_FAIL,
     DELETESUPPLIER_REQ,
     DELETESUPPLIER_SUCCESS,
-    DELETESUPPLIER_FAIL
+    DELETESUPPLIER_FAIL,
+    DELETESTOCK_REQ,
+    DELETESTOCK_SUCCESS,
+    DELETESTOCK_FAIL,
+    EDITSUPPLIER_REQ,
+    EDITSUPPLIER_SUCCESS,
+    EDITSUPPLIER_FAIL,
+    LOGOUT_USER
 } from "./Actiontypes";
 
 export const initStore = {
@@ -39,6 +46,12 @@ export const initStore = {
 export default (state = initStore, action) => {
     console.log('action called', action.payload);
     switch (action.type) {
+        case LOGOUT_USER:
+            console.log('logout, ', action.payload)
+            return {
+                ...state,
+                isLoggedin: false
+            }
         case ADDSUPPLIER_REQ:
             return {
                 ...state,
@@ -56,6 +69,23 @@ export default (state = initStore, action) => {
                 isLoading: false,
                 error: action.payload
             };
+        case EDITSUPPLIER_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case EDITSUPPLIER_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                supplierData: action.payload
+            };
+        case EDITSUPPLIER_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
         case DELETESUPPLIER_REQ:
             return {
                 ...state,
@@ -68,6 +98,23 @@ export default (state = initStore, action) => {
                 supplierData: action.payload
             };
         case DELETESUPPLIER_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
+        case DELETESTOCK_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case DELETESTOCK_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                inventoryData: action.payload
+            };
+        case DELETESTOCK_FAIL:
             return {
                 ...state,
                 isLoading: false,

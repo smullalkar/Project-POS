@@ -3,15 +3,16 @@ import { getSupplierData, deleteSupplier } from '../../Redux/Actions';
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { v4 as uuidv4 } from 'uuid';
 
 class Supplier extends Component {
     componentDidMount = () => {
         const { email } = this.props
-        this.props.getSupplierData(email)
+        getSupplierData(email)
     }
     render() {
-        const { supplierData, deleteSupplier, email, getSupplierData} = this.props
+        const { supplierData, match } = this.props
         return (
             <div className='container m-5'>
                 <Link to='/user/supplier/add'>
@@ -33,20 +34,19 @@ class Supplier extends Component {
                     <tbody>
                         {
                             supplierData.data && supplierData.data.map(item => (
-                                <tr>
+                                <tr key={uuidv4()}>
                                     <td>{item[1]}</td>
                                     <td>{item[2]}</td>
                                     <td>{item[3]}</td>
                                     <td>
-                                        <FontAwesomeIcon icon={faTrash}
-                                            onClick={() => {
-                                                deleteSupplier(item[4])
-                                                setTimeout(() => {
-                                                    this.props.history.push('/user/supplier');
-                                                }, 200);
-                                            }
-                                        }
-                                        />
+                                        <Link to={`${match.url}/delete/${item[4]}`}>
+                                            <FontAwesomeIcon icon={faTrash}/>
+                                        </Link>
+                                    </td>
+                                    <td>
+                                        <Link to={`${match.url}/edit/${item[0]}`}>
+                                            <FontAwesomeIcon icon={faEdit}/>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))
@@ -68,8 +68,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
     return {
-        getSupplierData: a => dispatch(getSupplierData(a)),
-        deleteSupplier: a => dispatch(deleteSupplier(a))
+        getSupplierData: a => dispatch(getSupplierData(a))
     };
 };
 export default connect(

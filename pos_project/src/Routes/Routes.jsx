@@ -6,9 +6,13 @@ import Register from '../Components/auth/Register';
 import StockInventory from '../Components/stock/StockInventory'
 import Supplier from '../Components/supplier/Supplier';
 import Addsupplier from '../Components/supplier/Addsupplier';
+import DeleteSupplier from '../Components/supplier/DeleteSupplier';
 import Customer from '../Components/customer/Customer';
 import AddStock from '../Components/stock/AddStock';
+import DeleteStock from '../Components/stock/DeleteStock';
 import Homeredirect from '../Components/common/Homeredirect';
+import EditSupplier from '../Components/supplier/EditSupplier';
+import EditStock from '../Components/stock/EditStock';
 
 export default class Routes extends Component {
     render() {
@@ -19,10 +23,17 @@ export default class Routes extends Component {
                     <Route exact path='/' component={Homeredirect}></Route>
                     <Route path='/login' component={Login}></Route>
                     <Route path='/register' component={Register}></Route>
+                    
                     <Route exact path='/user/stockinventory' component={StockInventory}></Route>
                     <Route path='/user/stockinventory/add' component={AddStock}></Route>
+                    <Route path='/user/stockinventory/delete/:id' component={DeleteStock}></Route>
+                    <Route path='/user/stockinventory/edit/:id' component={EditStock}></Route>
+
                     <Route exact path='/user/supplier' component={Supplier}></Route>
                     <Route path='/user/supplier/add' component={Addsupplier}></Route>
+                    <Route path='/user/supplier/delete/:id' component={DeleteSupplier}></Route>
+                    <Route path='/user/supplier/edit/:id' component={EditSupplier}></Route>
+
                     <Route path='/user/customer' component={Customer}></Route>
                     {/* <Route path='/users/listing/show/:id' exact component={UserDetails}></Route>
                     <Route path='/users/listing/show/:id/edit/:id' component={EditUser}></Route>

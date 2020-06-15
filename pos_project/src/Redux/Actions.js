@@ -22,7 +22,17 @@ import {
     ADDSUPPLIER_FAIL,
     DELETESUPPLIER_REQ,
     DELETESUPPLIER_SUCCESS,
-    DELETESUPPLIER_FAIL
+    DELETESUPPLIER_FAIL,
+    DELETESTOCK_REQ,
+    DELETESTOCK_SUCCESS,
+    DELETESTOCK_FAIL,
+    EDITSTOCK_REQ,
+    EDITSTOCK_SUCCESS,
+    EDITSTOCK_FAIL,
+    EDITSUPPLIER_REQ,
+    EDITSUPPLIER_SUCCESS,
+    EDITSUPPLIER_FAIL,
+    LOGOUT_USER
 } from "./Actiontypes";
 
 import axios from 'axios'
@@ -39,6 +49,11 @@ export const logUserSuccess = payload => ({
 
 export const logUserFail = payload => ({
     type: LOGIN_USER_FAIL,
+    payload: payload
+})
+
+export const logout = payload => ({
+    type: LOGOUT_USER,
     payload: payload
 })
 
@@ -144,6 +159,51 @@ export const deleteSupplierSuccess = payload => ({
 
 export const deleteSupplierFail = payload => ({
     type: DELETESUPPLIER_FAIL,
+    payload: payload
+})
+
+export const deleteStockReq = payload => ({
+    type: DELETESTOCK_REQ,
+    payload: payload
+})
+
+export const deleteStockSuccess = payload => ({
+    type: DELETESTOCK_SUCCESS,
+    payload: payload
+})
+
+export const deleteStockFail = payload => ({
+    type: DELETESTOCK_FAIL,
+    payload: payload
+})
+
+export const editStockReq = payload => ({
+    type: EDITSTOCK_REQ,
+    payload: payload
+})
+
+export const editStockSuccess = payload => ({
+    type: EDITSTOCK_SUCCESS,
+    payload: payload
+})
+
+export const editStockFail = payload => ({
+    type: EDITSTOCK_FAIL,
+    payload: payload
+})
+
+export const editSupplierReq = payload => ({
+    type: EDITSUPPLIER_REQ,
+    payload: payload
+})
+
+export const editSupplierSuccess = payload => ({
+    type: EDITSUPPLIER_SUCCESS,
+    payload: payload
+})
+
+export const editSupplierFail = payload => ({
+    type: EDITSUPPLIER_FAIL,
     payload: payload
 })
 
@@ -274,3 +334,60 @@ export const deleteSupplier = (payload) => {
             .catch(err => dispatch(deleteSupplierFail(err)));
     }
 }
+
+export const deleteStock = (payload) => {
+    console.log('delete stock payload', payload)
+    return dispatch => {
+        dispatch(deleteStockReq());
+        return axios
+            .get(`http://127.0.0.1:5000/user/stock/delete/${payload}`)
+            .then(res => {
+                return dispatch(deleteStockSuccess(res));
+            })
+            .catch(err => dispatch(deleteStockFail(err)));
+    }
+}
+
+export const editStock = (payload) => {
+    console.log(payload)
+    return dispatch => {
+        dispatch(editStockReq());
+        return axios
+            .post(`http://127.0.0.1:5000/user/stock/edit/${payload.stock_id}`,
+                {
+                    item_name: payload.item_name,
+                    ppu: payload.ppu,
+                    spu: payload.spu,
+                    qty: payload.qty,
+                    tax: payload.tax,
+                    supplier: payload.supplier,
+                    user_id: payload.user_id,
+                    supplier_id: payload.supplier_id
+                }
+            )
+            .then(res => {
+                return dispatch(editStockSuccess(res));
+            })
+            .catch(err => dispatch(editStockFail(err)));
+    };
+};
+
+export const editSupplier = (payload) => {
+    console.log(payload)
+    return dispatch => {
+        dispatch(editSupplierReq());
+        return axios
+            .post(`http://127.0.0.1:5000/user/supplier/edit/${payload.supplier_id}`,
+                {
+                    name: payload.name,
+                    address: payload.address,
+                    contact: payload.contact,
+                    user_id: payload.user_id
+                }
+            )
+            .then(res => {
+                return dispatch(editSupplierSuccess(res));
+            })
+            .catch(err => dispatch(editSupplierFail(err)));
+    };
+};

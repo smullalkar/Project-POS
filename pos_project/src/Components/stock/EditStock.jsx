@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { addItemToStock } from '../../Redux/Actions';
+import { editStock, getSupplierData} from '../../Redux/Actions';
 import { connect } from "react-redux";
+import { v4 as uuidv4 } from 'uuid';
 
-class AddStock extends Component {
+class EditStock extends Component {
     constructor(props) {
         super(props)
 
@@ -13,7 +14,9 @@ class AddStock extends Component {
             qty: '',
             tax: '',
             supplier: '',
-            user_id: ''
+            user_id: '',
+            stock_id: '',
+            supplier_id: ''
         }
     }
 
@@ -24,24 +27,41 @@ class AddStock extends Component {
     }
 
     componentDidMount = () => {
-        const { id } = this.props
+        const { id, inventoryData, match, email } = this.props
+        getSupplierData(email)
+
+        const stock = inventoryData.data.filter(item => {
+            return item[7] === Number(match.params.id)
+        })
+
         this.setState({
-            user_id: id
+            item_name: stock[0][2],
+            ppu: stock[0][3],
+            spu: stock[0][4],
+            qty: stock[0][5],
+            tax: stock[0][6],
+            supplier: stock[0][9],
+            user_id: id,
+            stock_id: Number(match.params.id),
+            supplier_id: stock[0][8]
         })
     }
 
     render() {
-        const { supplierData, addItemToStock } = this.props
+        const { editStock, supplierData } = this.props
+        const match_id = this.props.match.params.id
+        console.log('Edit state ', this.state)
         return (
             <div className='p-5 m-5'>
+                EDIT
                 <form
                     className='col-4 offset-4 needs-validation'
                     onSubmit={(e) => {
                         e.preventDefault()
-                        addItemToStock(this.state)
+                        editStock(this.state)
                         setTimeout(() => {
-                            this.props.history.push('/user/stockinventory');
-                        }, 200);
+                            this.props.history.push('/home');
+                        }, 500);
                         this.setState({
                             item_name: '',
                             ppu: '',
@@ -49,7 +69,9 @@ class AddStock extends Component {
                             qty: '',
                             tax: '',
                             supplier: '',
-                            user_id: ''
+                            user_id: '',
+                            stock_id: '',
+                            supplier_id: ''
                         })
                     }}
                 >
@@ -111,15 +133,13 @@ class AddStock extends Component {
                     <div className="form-group">
                         <select
                             className="custom-select"
-                            onChange={e =>
-                                this.setState({
-                                    supplier: e.target.value
-                                })
-                            }
+                            name='supplier_id'
+                            value={this.state.supplier_id}
+                            onChange={this.handleChange}
                         >
-                            <option selected>Open this select menu</option>
+                            <option>Open this select menu</option>
                             {
-                                supplierData.data && supplierData.data.map(sup => <option value={sup[0]}>{sup[1]}</option>)
+                                supplierData.data && supplierData.data.map(sup => <option key={uuidv4()} value={sup[0]}>{sup[1]}</option>)
                             }
                         </select>
                     </div>
@@ -127,7 +147,7 @@ class AddStock extends Component {
                         <button
                             type="submit"
                             className="btn btn-primary"
-                        >ADD</button>
+                        >UPDATE</button>
                     </div>
                     <div className='d-flex justify-content-center'>
                         <button
@@ -145,20 +165,22 @@ class AddStock extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('Addstock ', state.response)
+    console.log('EditStock ', state.response)
     return {
-        supplierData: state.supplierData,
+        inventoryData: state.inventoryData,
         email: state.loginData.data.email,
-        id: state.loginData.data.id
+        id: state.loginData.data.id,
+        supplierData: state.supplierData,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        addItemToStock: a => dispatch(addItemToStock(a))
+        getSupplierData: a => dispatch(getSupplierData(a)),
+        editStock: a => dispatch(editStock(a))
     };
 };
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddStock);
+)(EditStock);

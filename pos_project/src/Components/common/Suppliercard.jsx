@@ -8,7 +8,7 @@ export default class Suppliercard extends Component {
                 <img src="./supplier.png" className="card-img-top" alt="img" style={{height:'300px'}}/>
                 <div className="card-body">
                     <h5 className="card-title">SUPPLIERS</h5>
-                    <p className="card-text">Information about auppliers</p>
+                    <p className="card-text">Information about suppliers</p>
                     <Link to="/user/supplier" className="btn btn-primary">Manage suppliers</Link>
                 </div>
             </div>
