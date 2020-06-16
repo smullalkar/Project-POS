@@ -23,20 +23,19 @@ supplier;
 | contact | varchar(10)  | YES  |     | NULL    |                |
 +---------+--------------+------+-----+---------+----------------+
 
-CREATE TABLE stock(id int NOT NULL AUTO_INCREMENT,supplier_id int, item_code VARCHAR(255), item_name VARCHAR(255), price_per_unit_purchased int, price_per_unit_selling int, isavailable BOOLEAN, user_id int, tax int, PRIMARY KEY (id), FOREIGN KEY(supplier_id) REFERENCES supplier(id), FOREIGN KEY(user_id) REFERENCES user(id));
+CREATE TABLE stock(id int NOT NULL AUTO_INCREMENT,supplier_id int, item_name VARCHAR(255), price_per_unit_purchased int, price_per_unit_selling int, user_id int, tax int, qty int, PRIMARY KEY (id), FOREIGN KEY(supplier_id) REFERENCES supplier(id), FOREIGN KEY(user_id) REFERENCES user(id));
 stock;
 +--------------------------+--------------+------+-----+---------+----------------+
 | Field                    | Type         | Null | Key | Default | Extra          |
 +--------------------------+--------------+------+-----+---------+----------------+
 | id                       | int          | NO   | PRI | NULL    | auto_increment |
 | supplier_id              | int          | YES  | MUL | NULL    |                |
-| item_code                | varchar(255) | YES  |     | NULL    |                |
 | item_name                | varchar(255) | YES  |     | NULL    |                |
 | price_per_unit_purchased | int          | YES  |     | NULL    |                |
 | price_per_unit_selling   | int          | YES  |     | NULL    |                |
-| isavailable              | tinyint(1)   | YES  |     | NULL    |                |
 | user_id                  | int          | YES  | MUL | NULL    |                |
 | tax                      | int          | YES  |     | NULL    |                |
+| qty                      | int          | YES  |     | NULL    |                |
 +--------------------------+--------------+------+-----+---------+----------------+
 
 CREATE TABLE expenses(id int NOT NULL AUTO_INCREMENT,amount VARCHAR(255),stock_id int, PRIMARY KEY (id), FOREIGN KEY(stock_id) REFERENCES stock(id));
@@ -52,7 +51,7 @@ expenses;
 
 CREATE TABLE customer(id int NOT NULL AUTO_INCREMENT,name VARCHAR(255), contact VARCHAR(10), email VARCHAR(255), PRIMARY KEY (id));
 
-customer;
+customer;;
 +---------+--------------+------+-----+---------+----------------+
 | Field   | Type         | Null | Key | Default | Extra          |
 +---------+--------------+------+-----+---------+----------------+

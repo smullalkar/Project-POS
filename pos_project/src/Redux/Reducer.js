@@ -29,7 +29,12 @@ import {
     EDITSUPPLIER_REQ,
     EDITSUPPLIER_SUCCESS,
     EDITSUPPLIER_FAIL,
-    LOGOUT_USER
+    LOGOUT_USER,
+    ADD_ITEM_TO_BILL,
+    REMOVE_ITEM_BILL,
+    ADDCUSTOMER_REQ,
+    ADDCUSTOMER_SUCCESS,
+    ADDCUSTOMER_FAIL
 } from "./Actiontypes";
 
 export const initStore = {
@@ -40,12 +45,32 @@ export const initStore = {
     loginData: [],
     isLoggedin: false,
     customerData: [],
-    supplierData: []
+    supplierData: [],
+    bill_items: [],
+    billing_customer:[]
 };
 
 export default (state = initStore, action) => {
     console.log('action called', action.payload);
     switch (action.type) {
+        case ADD_ITEM_TO_BILL:
+            let item = []
+            state.inventoryData.data.filter(elem => {
+                if (elem[7] === Number(action.payload.stock_id)) {
+                    return item.push([elem, action.payload.qty])
+                }
+            })
+            return {
+                ...state,
+                bill_items: [...state.bill_items, ...item]
+            }
+        case REMOVE_ITEM_BILL:
+            return {
+                ...state,
+                bill_items: [...state.bill_items].filter(item => {
+                    return item[0][7] !== Number(action.payload)
+                })
+            }
         case LOGOUT_USER:
             console.log('logout, ', action.payload)
             return {
@@ -183,6 +208,23 @@ export default (state = initStore, action) => {
                 customerData: action.payload
             };
         case GET_CUSTOMER_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
+        case ADDCUSTOMER_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case ADDCUSTOMER_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                billing_customer: action.payload
+            };
+        case ADDCUSTOMER_FAIL:
             return {
                 ...state,
                 isLoading: false,

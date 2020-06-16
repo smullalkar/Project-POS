@@ -7,7 +7,7 @@ class Register extends Component {
         super(props)
 
         this.state = {
-            uname: '',
+            organisation: '',
             address: '',
             contact: '',
             email: '',
@@ -31,7 +31,7 @@ class Register extends Component {
                         e.preventDefault()
                         registerUser(this.state)
                         this.setState({
-                            uname: '',
+                            organisation: '',
                             address: '',
                             contact: '',
                             email: '',
@@ -43,8 +43,8 @@ class Register extends Component {
                         <label>User name</label>
                         <input
                             required
-                            name='uname'
-                            value={this.state.uname}
+                            name='organisation'
+                            value={this.state.organisation}
                             onChange={this.handleChange}
                             type="text"
                             className="form-control"
@@ -110,7 +110,6 @@ class Register extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('Regisetered ?', state.response)
     return {
         response: state.response
     };

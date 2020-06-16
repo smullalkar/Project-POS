@@ -32,10 +32,25 @@ import {
     EDITSUPPLIER_REQ,
     EDITSUPPLIER_SUCCESS,
     EDITSUPPLIER_FAIL,
-    LOGOUT_USER
+    LOGOUT_USER,
+    ADD_ITEM_TO_BILL,
+    REMOVE_ITEM_BILL,
+    ADDCUSTOMER_REQ,
+    ADDCUSTOMER_SUCCESS,
+    ADDCUSTOMER_FAIL
 } from "./Actiontypes";
 
 import axios from 'axios'
+
+export const addItemToBill = payload => ({
+    type: ADD_ITEM_TO_BILL,
+    payload: payload
+})
+
+export const removeItemBill = payload => ({
+    type: REMOVE_ITEM_BILL,
+    payload: payload
+})
 
 export const logUserReq = payload => ({
     type: LOGIN_USER_REQ,
@@ -207,6 +222,21 @@ export const editSupplierFail = payload => ({
     payload: payload
 })
 
+export const addCustomerReq = payload => ({
+    type: ADDCUSTOMER_REQ,
+    payload: payload
+})
+
+export const addCustomerSuccess = payload => ({
+    type: ADDCUSTOMER_SUCCESS,
+    payload: payload
+})
+
+export const addCustomerFail = payload => ({
+    type: ADDCUSTOMER_FAIL,
+    payload: payload
+})
+
 export const geInventorytData = (payload) => {
     return dispatch => {
         dispatch(getInventoryReq());
@@ -250,7 +280,7 @@ export const registerUser = (payload) => {
         return axios
             .post(`http://127.0.0.1:5000/user/register`,
                 {
-                    uname: payload.uname,
+                    organisation: payload.organisation,
                     address: payload.address,
                     contact: payload.contact,
                     email: payload.email,
@@ -389,5 +419,24 @@ export const editSupplier = (payload) => {
                 return dispatch(editSupplierSuccess(res));
             })
             .catch(err => dispatch(editSupplierFail(err)));
+    };
+};
+
+export const addCustomer = (payload) => {
+    console.log(payload)
+    return dispatch => {
+        dispatch(addCustomerReq());
+        return axios
+            .post(`http://127.0.0.1:5000/customer/add`,
+                {
+                    customer_name: payload.customer_name,
+                    contact: payload.contact,
+                    email: payload.email
+                }
+            )
+            .then(res => {
+                return dispatch(addCustomerSuccess(res));
+            })
+            .catch(err => dispatch(addCustomerFail(err)));
     };
 };

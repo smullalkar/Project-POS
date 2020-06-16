@@ -20,21 +20,11 @@ CORS(app)
 def home():
     return 'home'
 
-# @app.route('/create/user_table')
-# def user_table():
-#     cur = mysql.connection.cursor()
-
-#     cur.execute('''CREATE TABLE user(id int NOT NULL AUTO_INCREMENT, username VARCHAR(255), address VARCHAR(255), contact VARCHAR(10), email VARCHAR(255), password VARCHAR(255), PRIMARY KEY (id));''')
-#     mysql.connection.commit()
-#     cur.close()
-    
-#     return 'User Table added'
-
 # sending stocks data
 @app.route('/user/inventory/<email>')
 def user_inventory(email):
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT u.username,u.address,s.item_name,s.price_per_unit_purchased,s.price_per_unit_selling,s.qty,s.tax,s.id FROM user as u JOIN stock as s ON u.id = s.user_id WHERE u.email = "%s";'''%(email))
+    cur.execute('''SELECT u.organisation,u.address,s.item_name,s.price_per_unit_purchased,s.price_per_unit_selling,s.qty, s.tax, s.id, s.supplier_id, sup.name FROM user as u JOIN stock as s ON u.id = s.user_id JOIN supplier as sup on s.supplier_id = sup.id WHERE u.email = "%s";'''%(email))
     result = cur.fetchall()
     data = []
     for row in result:
@@ -45,7 +35,7 @@ def user_inventory(email):
 @app.route('/user/customer/<email>')
 def user_customers(email):
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT u.username, b.amount, b.created_at, c.name, c.contact, b.id FROM user as u JOIN bill as b ON u.id = b.user_id JOIN customer as c ON b.customer_id = c.id WHERE u.email = "%s";'''%(email))
+    cur.execute('''SELECT u.organisation, b.amount, b.created_at, c.name, c.contact, b.id FROM user as u JOIN bill as b ON u.id = b.user_id JOIN customer as c ON b.customer_id = c.id WHERE u.email = "%s";'''%(email))
     result = cur.fetchall()
     data = []
     for row in result:
@@ -73,10 +63,20 @@ def delete_supplier(user_supplier_id):
 
     return {'message': 'supplier deleted'}
 
+# delete stock data
+@app.route('/user/stock/delete/<stock_id>')
+def delete_stock(stock_id):
+    cur = mysql.connection.cursor()
+    cur.execute('''DELETE FROM stock WHERE id = '%s';'''%(stock_id))
+    mysql.connection.commit()
+    cur.close()
+
+    return {'message': 'stock deleted'}
+
 # Registeration for a new user
 @app.route("/user/register", methods = ["POST"])
 def create():
-    username = request.json["uname"]
+    organisation = request.json["organisation"]
     address = request.json["address"]    
     contact = request.json["contact"]    
     email = request.json["email"]
@@ -84,11 +84,42 @@ def create():
     
     cur = mysql.connection.cursor()
 
-    cur.execute('''INSERT INTO user(username,address,contact,email,password) VALUES ("%s","%s","%s","%s","%s");'''%(username,address,contact,email,password))
+    cur.execute('''INSERT INTO user(organisation,address,contact,email,password) VALUES ("%s","%s","%s","%s","%s");'''%(organisation,address,contact,email,password))
     mysql.connection.commit()
     cur.close()
 
-    return json.dumps({"user_added": True, "message": "registeration successful"})    
+    return json.dumps({"user_added": True, "message": "registeration successful"}) 
+
+# adding customers or returning customers if already exists
+@app.route("/customer/add", methods = ["POST"])
+def customer_add_return():
+    name = request.json["customer_name"]
+    contact = request.json["contact"]    
+    email = request.json["email"]
+    
+    cur = mysql.connection.cursor()
+    cur.execute('''select * from customer WHERE email = '%s';'''%(email))
+    result = cur.fetchall()
+    data = []
+    for row in result:
+        data.append(row)
+    
+    if len(data) != 0 and data[0][3] == email:
+        return json.dumps(data)
+    else:
+        cur = mysql.connection.cursor()
+        cur.execute('''INSERT INTO customer(name,contact,email) VALUES ("%s","%s","%s");'''%(name,contact,email))
+        mysql.connection.commit()
+        cur.close()
+
+        cur = mysql.connection.cursor()
+        cur.execute('''select * from customer WHERE email = '%s';'''%(email))
+        result = cur.fetchall()
+        data = []
+        for row in result:
+            data.append(row)
+        
+        return json.dumps(data)
 
 # adding items to stocks
 @app.route("/user/stock/add", methods = ["POST"])
@@ -108,6 +139,24 @@ def addItemToStock():
     cur.close()
 
     return {'message' : 'Item added'}
+
+# edit item in stock
+@app.route("/user/stock/edit/<stock_id>", methods = ["POST"])
+def editItemToStock(stock_id):
+    item_name = request.json["item_name"]
+    ppu = request.json["ppu"]    
+    spu = request.json["spu"]    
+    qty = request.json["qty"]
+    tax = request.json["tax"]
+    supplier_id = request.json['supplier_id']
+    user_id = request.json['user_id']
+    cur = mysql.connection.cursor()
+
+    cur.execute('''UPDATE stock SET supplier_id = '%s',item_name = '%s' ,price_per_unit_purchased = '%s', price_per_unit_selling = '%s',user_id = '%s', tax = '%s' ,qty = '%s' WHERE id = %s ;'''%(supplier_id,item_name,ppu,spu,user_id,tax,qty,stock_id))
+    mysql.connection.commit()
+    cur.close()
+
+    return {'message' : 'Item Edited'}
 
 # adding suppliers
 @app.route("/user/supplier/add", methods = ["POST"])
@@ -137,12 +186,27 @@ def addSupplier():
     cur.close()
 
     cur = mysql.connection.cursor()
-    cur.execute('''select s.id, s.name, s.address, s.contact from user_supplier as us JOIN user as u on us.user_id = u.id JOIN supplier as s on us.supplier_id=s.id WHERE u.id = '%s';'''%(user_id))
+    cur.execute('''select s.id, s.name, s.address, s.contact, us.id from user_supplier as us JOIN user as u on us.user_id = u.id JOIN supplier as s on us.supplier_id=s.id WHERE u.id = '%s';'''%(user_id))
     result = cur.fetchall()
     data = []
     for row in result:
         data.append(row)
     return json.dumps(data)
+
+# updating suppliers
+@app.route("/user/supplier/edit/<supplier_id>", methods = ["POST"])
+def editSupplier(supplier_id):
+    name = request.json["name"]
+    address = request.json["address"]    
+    contact = request.json["contact"]    
+    user_id = request.json["user_id"]
+    
+    cur = mysql.connection.cursor()
+
+    cur.execute('''UPDATE supplier SET name = '%s',address = '%s',contact = '%s' WHERE id = %s ;'''%(name,address,contact,supplier_id))
+    mysql.connection.commit()
+    cur.close()
+    return {'message' : 'Suppleir Edited'}
 
 # login of existing users
 @app.route('/user/login', methods=['POST'])
@@ -176,7 +240,7 @@ def login():
         return {'message': 'username or password incorrect'}
     
 
-
+# validation of token
 @app.route('/auth_check', methods=['POST'])
 def auth_check():
     auth_token = request.json['auth_token']

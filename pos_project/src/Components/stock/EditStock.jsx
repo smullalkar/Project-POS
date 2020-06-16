@@ -53,7 +53,6 @@ class EditStock extends Component {
         console.log('Edit state ', this.state)
         return (
             <div className='p-5 m-5'>
-                EDIT
                 <form
                     className='col-4 offset-4 needs-validation'
                     onSubmit={(e) => {

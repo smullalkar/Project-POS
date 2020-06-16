@@ -28,7 +28,7 @@ class Login extends Component {
     }
 
     render() {
-        const { loginUser, history, message, isLoggedin } = this.props
+        const { loginUser, isLoggedin } = this.props
         const {wrong_pass} = this.state
         return (
             <div className='p-5 m-5'>
@@ -75,7 +75,6 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('loginData', state)
     return {
         loginData: state.loginData,
         message: state.loginData.message,

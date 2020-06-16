@@ -40,7 +40,7 @@ class AddStock extends Component {
                         e.preventDefault()
                         addItemToStock(this.state)
                         setTimeout(() => {
-                            this.props.history.push('/user/stockinventory');
+                            this.props.history.push('/home');
                         }, 200);
                         this.setState({
                             item_name: '',
