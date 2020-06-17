@@ -24,7 +24,7 @@ def home():
 @app.route('/user/inventory/<email>')
 def user_inventory(email):
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT u.organisation,u.address,s.item_name,s.price_per_unit_purchased,s.price_per_unit_selling,s.qty, s.tax, s.id, s.supplier_id, sup.name FROM user as u JOIN stock as s ON u.id = s.user_id JOIN supplier as sup on s.supplier_id = sup.id WHERE u.email = "%s";'''%(email))
+    cur.execute('''SELECT u.organisation,u.address,s.item_name,s.price_per_unit_purchased,s.price_per_unit_selling,s.qty, s.tax, s.id, s.supplier_id, sup.name, u.contact, u.email FROM user as u JOIN stock as s ON u.id = s.user_id JOIN supplier as sup on s.supplier_id = sup.id WHERE u.email = "%s";'''%(email))
     result = cur.fetchall()
     data = []
     for row in result:
@@ -221,6 +221,10 @@ def login():
     flag = False 
     isAdmin = False
     id = None
+    organisation = None
+    address= = None
+    contact = None
+    
     for row in result:
         if row[4] == email and row[5] == password:
             flag = True
@@ -232,7 +236,7 @@ def login():
             break
                 
     if flag == True:
-        payload = {'email': email, 'id': id, 'isadmin': isAdmin, 'message': True}
+        payload = {'email': email, 'id': id, 'organisation': organisation, 'address': address, 'contact': contact, 'isadmin': isAdmin, 'message': True}
         key = 'secret'
         encode_jwt = jwt.encode(payload, key)
         return {'auth_token': encode_jwt.decode(), 'message': True}

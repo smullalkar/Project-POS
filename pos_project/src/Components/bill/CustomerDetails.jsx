@@ -22,7 +22,7 @@ class CustomerDetails extends Component {
     render() {
         const { addCustomer } = this.props
         return (
-            <div className='m-3'>
+            <div>
                 <form
                     className='needs-validation'
                     onSubmit={(e) => {
@@ -78,6 +78,7 @@ class CustomerDetails extends Component {
                         </div>
                     </div>
                 </form>
+                <hr/>
             </div>
         )
     }
