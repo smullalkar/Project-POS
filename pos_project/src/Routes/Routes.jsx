@@ -14,6 +14,7 @@ import Homeredirect from '../Components/common/Homeredirect';
 import EditSupplier from '../Components/supplier/EditSupplier';
 import EditStock from '../Components/stock/EditStock';
 import Bill from '../Components/bill/Bill';
+import Invoice from '../Components/bill/Invoice';
 
 export default class Routes extends Component {
     render() {
@@ -37,6 +38,7 @@ export default class Routes extends Component {
 
                     <Route path='/user/customer' component={Customer}></Route>
                     <Route path='/user/bill' component={Bill}></Route>
+                    <Route path='/user/invoice' component={Invoice}></Route>
                     {/* <Route path='/users/listing/show/:id' exact component={UserDetails}></Route>
                     <Route path='/users/listing/show/:id/edit/:id' component={EditUser}></Route>
                     <Route path='/users/listing/show/:id/delete/:id' component={DeleteUser}></Route>

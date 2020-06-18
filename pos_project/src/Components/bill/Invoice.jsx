@@ -1,16 +1,53 @@
 import React, { Component } from 'react'
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 class Invoice extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            customer_id: '',
+            stockitems_and_qty: '',
+            created_at: '',
+            user_id: '',
+            amount: ''
+        }
+    }
+
+    componentDidMount = () => {
+        const { bill_items, billing_customer, id } = this.props
+        let customer_id
+        if (billing_customer.length !== 0) {
+            customer_id = billing_customer.data[0][0]
+        }
+        var tempDate = new Date();
+        var bill = 0
+        for (let i = 0; i < bill_items.length; i++) {
+            bill += (Number(bill_items[i][0][4]) + (Number(bill_items[i][0][4]) * (Number(bill_items[i][0][6]) / 100))) * bill_items[i][1]
+        }
+        let date = tempDate.getFullYear() + ':' + (tempDate.getMonth() + 1) + ':' + tempDate.getDate() + ' ' + tempDate.getHours() + ':' + tempDate.getMinutes() + ':' + tempDate.getSeconds()
+        this.setState({
+            amount: bill,
+            customer_id: customer_id,
+            stockitems_and_qty: bill_items,
+            created_at: date,
+            user_id: id,
+        })
+    }
+
     render() {
-        const { inventoryData } = this.props
+        const { address, organisation, contact, email, billing_customer, bill_items } = this.props
+        var tempDate = new Date();
+        console.log('invoice ', this.state)
         var date = tempDate.getFullYear() + ':' + (tempDate.getMonth() + 1) + ':' + tempDate.getDate() + ' ' + tempDate.getHours() + ':' + tempDate.getMinutes() + ':' + tempDate.getSeconds();
         return (
             <div>
-                <div className="container">
+                <div className="container mt-5">
                     <div className="card">
                         <div className="card-header">
                             Invoice
-                            <strong>{date}</strong>
+                            <strong className='mx-2'>{date}</strong>
                             <span className="float-right"> <strong>Status:</strong> Paid</span>
                         </div>
                         <div className="card-body">
@@ -18,22 +55,19 @@ class Invoice extends Component {
                                 <div className="col-sm-6">
                                     <h6 className="mb-3">From:</h6>
                                     <div>
-                                        <strong>Webz Poland</strong>
+                                        <strong>{organisation}</strong>
                                     </div>
-                                    <div>Madalinskiego 8</div>
-                                    <div>71-101 Szczecin, Poland</div>
-                                    <div>Email: info@webz.com.pl</div>
-                                    <div>Phone: +48 444 666 3333</div>
+                                    <div>{address}</div>
+                                    <div>Email: {email}</div>
+                                    <div>Phone: {contact}</div>
                                 </div>
                                 <div className="col-sm-6">
                                     <h6 className="mb-3">To:</h6>
                                     <div>
-                                        <strong>Bob Mart</strong>
+                                        <strong>{billing_customer.data[0][1]}</strong>
                                     </div>
-                                    <div>Attn: Daniel Marek</div>
-                                    <div>43-190 Mikolow, Poland</div>
-                                    <div>Email: marek@daniel.com</div>
-                                    <div>Phone: +48 123 456 789</div>
+                                    <div>Email: {billing_customer.data[0][3]}</div>
+                                    <div>Phone: {billing_customer.data[0][2]}</div>
                                 </div>
                             </div>
                             <div className="table-responsive-sm">
@@ -42,49 +76,26 @@ class Invoice extends Component {
                                         <tr>
                                             <th className="center">#</th>
                                             <th>Item</th>
-                                            <th>Description</th>
-                                            <th className="right">Unit Cost</th>
+                                            <th>Unit Cost</th>
+                                            <th className="right">GST</th>
                                             <th className="center">Qty</th>
                                             <th className="right">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td className="center">1</td>
-                                            <td className="left strong">Origin License</td>
-                                            <td className="left">Extended License</td>
+                                        {
+                                            bill_items && bill_items.map((item, index) => (
+                                                <tr key={uuidv4()}>
+                                                    <td className="center">{index+1}</td>
+                                                    <td className="left strong">{item[0][2]}</td>
+                                                    <td className="left">{item[0][4]}</td>
 
-                                            <td className="right">$999,00</td>
-                                            <td className="center">1</td>
-                                            <td className="right">$999,00</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="center">2</td>
-                                            <td className="left">Custom Services</td>
-                                            <td className="left">Instalation and Customization (cost per hour)</td>
-
-                                            <td className="right">$150,00</td>
-                                            <td className="center">20</td>
-                                            <td className="right">$3.000,00</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="center">3</td>
-                                            <td className="left">Hosting</td>
-                                            <td className="left">1 year subcription</td>
-
-                                            <td className="right">$499,00</td>
-                                            <td className="center">1</td>
-                                            <td className="right">$499,00</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="center">4</td>
-                                            <td className="left">Platinum Support</td>
-                                            <td className="left">1 year subcription 24/7</td>
-
-                                            <td className="right">$3.999,00</td>
-                                            <td className="center">1</td>
-                                            <td className="right">$3.999,00</td>
-                                        </tr>
+                                                    <td className="right">{item[0][6]}</td>
+                                                    <td className="center">{item[1]}</td>
+                                                    <td className="right">{parseFloat(Number(item[1]) * (Number(item[0][4]) + (Number(item[0][4]) * (Number(item[0][6]) / 100)))).toFixed(2)}</td>
+                                                </tr>
+                                            ))
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -96,31 +107,16 @@ class Invoice extends Component {
                                         <tbody>
                                             <tr>
                                                 <td className="left">
-                                                    <strong>Subtotal</strong>
-                                                </td>
-                                                <td className="right">$8.497,00</td>
-                                            </tr>
-                                            <tr>
-                                                <td className="left">
-                                                    <strong>VAT (10%)</strong>
-                                                </td>
-                                                <td className="right">$679,76</td>
-                                            </tr>
-                                            <tr>
-                                                <td className="left">
                                                     <strong>Total</strong>
                                                 </td>
                                                 <td className="right">
-                                                    <strong>$7.477,36</strong>
+                                                    <strong>{this.state.amount}</strong>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -138,7 +134,10 @@ const mapStateToProps = state => {
         contact: state.loginData.data.contact,
         email: state.loginData.data.email,
         id: state.loginData.data.id,
-        billing_customer: state.billing_customer
+        billing_customer: state.billing_customer,
+        bill_items: state.bill_items,
+        customerData: state.customerData,
+        supplierData: state.supplierData,
     };
 };
 

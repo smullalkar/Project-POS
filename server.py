@@ -222,13 +222,16 @@ def login():
     isAdmin = False
     id = None
     organisation = None
-    address= = None
+    address = None
     contact = None
     
     for row in result:
         if row[4] == email and row[5] == password:
             flag = True
             id = row[0]
+            organisation=row[1]
+            address=row[2]
+            contact=row[3]
             if row[4] == 'smullalkar@gmail.com' and row[5] == 'pass123':
                 isAdmin = True
             else:

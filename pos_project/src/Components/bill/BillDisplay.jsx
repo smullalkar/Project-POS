@@ -3,15 +3,14 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 class BillDisplay extends Component {
+
     render() {
         const { bill_items } = this.props
-        let bill = 0
+        var bill = 0
         for (let i = 0; i < bill_items.length; i++) {
             bill += (Number(bill_items[i][0][4]) + (Number(bill_items[i][0][4]) * (Number(bill_items[i][0][6]) / 100))) * bill_items[i][1]
         }
-        var tempDate = new Date();
-        var date = tempDate.getFullYear() + ':' + (tempDate.getMonth() + 1) + ':' + tempDate.getDate() + ' ' + tempDate.getHours() + ':' + tempDate.getMinutes() + ':' + tempDate.getSeconds();
-
+        console.log('bill sending state ', this.state)
         return (
             <div>
                 <div className="card">
@@ -19,8 +18,7 @@ class BillDisplay extends Component {
                         <h5 className="card-title">TOTAL BILL</h5>
                         <hr />
                         <p className="card-text">Amount in Rs : {parseFloat(bill).toFixed(2)}</p>
-                        <button className="btn btn-primary">Generate Invoice</button>
-                        <div>{date}</div>
+                        <Link to='/user/invoice'><button className="btn btn-primary">Generate Invoice</button></Link>
                     </div>
                 </div>
             </div>
@@ -29,6 +27,7 @@ class BillDisplay extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log('Display bill ', state)
     return {
         bill_items: state.bill_items
     };
