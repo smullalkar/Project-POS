@@ -35,7 +35,7 @@ class StockInventory extends Component {
                     </thead>
                     <tbody>
                         {
-                            inventoryData.data && inventoryData.data.map(item => (
+                            inventoryData && inventoryData.data.map(item => (
                                 <tr key={uuidv4()}>
                                     <td>{item[2]}</td>
                                     <td>{item[3]}</td>
