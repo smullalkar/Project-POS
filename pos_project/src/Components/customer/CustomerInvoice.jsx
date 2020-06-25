@@ -2,54 +2,26 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
-import { addCustomerBill, removeAllItemBill } from '../../Redux/Actions'
+import { getCustomerBill } from '../../Redux/Actions'
 
-class Invoice extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            customer_id: '',
-            stockitems_and_qty: '',
-            user_id: '',
-            amount: ''
-        }
-    }
-
+class CustomerInvoice extends Component {
     componentDidMount = () => {
-        const { bill_items, billing_customer, id } = this.props
-        let customer_id
-        if (billing_customer.length !== 0) {
-            customer_id = billing_customer.data[0][0]
-        }
-        var tempDate = new Date();
-        var bill = 0
-        for (let i = 0; i < bill_items.length; i++) {
-            bill += (Number(bill_items[i][0][4]) + (Number(bill_items[i][0][4]) * (Number(bill_items[i][0][6]) / 100))) * bill_items[i][1]
-        }
-        function n(n) {
-            return n > 9 ? "" + n : "0" + n;
-        }
-        this.setState({
-            amount: bill,
-            customer_id: customer_id,
-            stockitems_and_qty: bill_items,
-            user_id: id,
-        })
-
+        const { getCustomerBill, match } = this.props
+        let b_id = match.params.id
+        getCustomerBill(b_id)
     }
 
     render() {
-        const { addCustomerBill, removeAllItemBill, address, organisation, contact, email, billing_customer, bill_items } = this.props
-        var tempDate = new Date();
-        console.log('invoice ', this.state)
-        var date = tempDate.getFullYear() + ':' + (tempDate.getMonth() + 1) + ':' + tempDate.getDate() + ' ' + tempDate.getHours() + ':' + tempDate.getMinutes() + ':' + tempDate.getSeconds();
+        const { address, organisation, contact, email, customerBill } = this.props
         return (
             <div>
                 <div className="container mt-5">
                     <div className="card">
                         <div className="card-header">
                             Invoice
-                            <strong className='mx-2'>{date}</strong>
+                            {
+                                customerBill.data && <strong className='mx-2'>{customerBill.data[0][2]}</strong>
+                            }
                             <span className="float-right"> <strong>Status:</strong> Paid</span>
                         </div>
                         <div className="card-body">
@@ -64,12 +36,18 @@ class Invoice extends Component {
                                     <div>Phone: {contact}</div>
                                 </div>
                                 <div className="col-sm-6">
-                                    <h6 className="mb-3">To:</h6>
-                                    <div>
-                                        <strong>{billing_customer.data[0][1]}</strong>
-                                    </div>
-                                    <div>Email: {billing_customer.data[0][3]}</div>
-                                    <div>Phone: {billing_customer.data[0][2]}</div>
+                                    {
+                                        customerBill.data &&
+                                        <>
+                                            <h6 className="mb-3">To:</h6>
+                                            <div>
+                                                <strong>{customerBill.data[0][4]}</strong>
+                                            </div>
+                                            <div>Email: {customerBill.data[0][6]}</div>
+                                            <div>Phone: {customerBill.data[0][5]}</div>
+                                        </>
+
+                                    }
                                 </div>
                             </div>
                             <div className="table-responsive-sm">
@@ -86,15 +64,15 @@ class Invoice extends Component {
                                     </thead>
                                     <tbody>
                                         {
-                                            bill_items && bill_items.map((item, index) => (
+                                            customerBill.data && customerBill.data.map((item, index) => (
                                                 <tr key={uuidv4()}>
                                                     <td className="center">{index + 1}</td>
-                                                    <td className="left strong">{item[0][2]}</td>
-                                                    <td className="left">{item[0][4]}</td>
+                                                    <td className="left strong">{item[7]}</td>
+                                                    <td className="left">{item[8]}</td>
 
-                                                    <td className="right">{item[0][6]}</td>
-                                                    <td className="center">{item[1]}</td>
-                                                    <td className="right">{parseFloat(Number(item[1]) * (Number(item[0][4]) + (Number(item[0][4]) * (Number(item[0][6]) / 100)))).toFixed(2)}</td>
+                                                    <td className="right">{item[9]}</td>
+                                                    <td className="center">{item[10]}</td>
+                                                    <td className="right">{parseFloat(Number(item[10]) * (Number(item[8]) + (Number(item[8]) * (Number(item[9]) / 100)))).toFixed(2)}</td>
                                                 </tr>
                                             ))
                                         }
@@ -112,7 +90,9 @@ class Invoice extends Component {
                                                     <strong>Total</strong>
                                                 </td>
                                                 <td className="right">
-                                                    <strong>{parseFloat(this.state.amount).toFixed(2)}</strong>
+                                                    {
+                                                        customerBill.data && <strong>{parseFloat(customerBill.data[0][1]).toFixed(2)}</strong>
+                                                    }
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -126,19 +106,8 @@ class Invoice extends Component {
                     <div>
                         <button
                             onClick={() => this.props.history.goBack()}
-                            className='btn btn-primary mx-2'>
-                            CANCEL
-                        </button>
-                        <button
-                            onClick={() => {
-                                addCustomerBill(this.state)
-                                removeAllItemBill()
-                                setTimeout(() => {
-                                    this.props.history.push('/home')
-                                }, 300)
-                            }}
-                            className='btn btn-primary mx-2'>
-                            CONFIRM
+                            className='btn btn-primary'>
+                            Go Back
                     </button>
                     </div>
                 </div>
@@ -149,29 +118,24 @@ class Invoice extends Component {
 
 
 const mapStateToProps = state => {
-    console.log('bill added?', state.billadded)
+    console.log('customer bill details', state.customerBill)
     return {
-        inventoryData: state.inventoryData,
         organisation: state.loginData.data.organisation,
         address: state.loginData.data.address,
         contact: state.loginData.data.contact,
         email: state.loginData.data.email,
         id: state.loginData.data.id,
-        billing_customer: state.billing_customer,
-        bill_items: state.bill_items,
-        customerData: state.customerData,
-        supplierData: state.supplierData,
+        customerBill: state.customerBill
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        addCustomerBill: a => dispatch(addCustomerBill(a)),
-        removeAllItemBill: a => dispatch(removeAllItemBill(a))
+        getCustomerBill: a => dispatch(getCustomerBill(a))
     };
 };
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Invoice);
+)(CustomerInvoice);

@@ -15,6 +15,7 @@ import EditSupplier from '../Components/supplier/EditSupplier';
 import EditStock from '../Components/stock/EditStock';
 import Bill from '../Components/bill/Bill';
 import Invoice from '../Components/bill/Invoice';
+import CustomerInvoice from '../Components/customer/CustomerInvoice';
 
 export default class Routes extends Component {
     render() {
@@ -36,7 +37,8 @@ export default class Routes extends Component {
                     <Route path='/user/supplier/delete/:id' component={DeleteSupplier}></Route>
                     <Route path='/user/supplier/edit/:id' component={EditSupplier}></Route>
 
-                    <Route path='/user/customer' component={Customer}></Route>
+                    <Route exact path='/user/customer' component={Customer}></Route>
+                    <Route path='/user/customer/:id' component={CustomerInvoice}></Route>
                     <Route path='/user/bill' component={Bill}></Route>
                     <Route path='/user/invoice' component={Invoice}></Route>
                     {/* <Route path='/users/listing/show/:id' exact component={UserDetails}></Route>

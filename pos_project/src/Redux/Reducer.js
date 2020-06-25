@@ -32,9 +32,16 @@ import {
     LOGOUT_USER,
     ADD_ITEM_TO_BILL,
     REMOVE_ITEM_BILL,
+    REMOVE_ALLITEM_BILL,
     ADDCUSTOMER_REQ,
     ADDCUSTOMER_SUCCESS,
-    ADDCUSTOMER_FAIL
+    ADDCUSTOMER_FAIL,
+    ADDCUSTOMER_BILL_REQ,
+    ADDCUSTOMER_BILL_SUCCESS,
+    ADDCUSTOMER_BILL_FAIL,
+    GETCUSTOMER_BILL_REQ,
+    GETCUSTOMER_BILL_SUCCESS,
+    GETCUSTOMER_BILL_FAIL
 } from "./Actiontypes";
 
 export const initStore = {
@@ -47,12 +54,48 @@ export const initStore = {
     customerData: [],
     supplierData: [],
     bill_items: [],
-    billing_customer:[]
+    billing_customer: [],
+    billadded: false,
+    customerBill: []
 };
 
 export default (state = initStore, action) => {
     console.log('action called', action.payload);
     switch (action.type) {
+        case GETCUSTOMER_BILL_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case GETCUSTOMER_BILL_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                customerBill: action.payload
+            };
+        case GETCUSTOMER_BILL_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
+        case ADDCUSTOMER_BILL_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case ADDCUSTOMER_BILL_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                billadded: action.payload
+            };
+        case ADDCUSTOMER_BILL_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
         case ADD_ITEM_TO_BILL:
             let item = []
             state.inventoryData.data.filter(elem => {
@@ -70,6 +113,11 @@ export default (state = initStore, action) => {
                 bill_items: [...state.bill_items].filter(item => {
                     return item[0][7] !== Number(action.payload)
                 })
+            }
+        case REMOVE_ALLITEM_BILL:
+            return {
+                ...state,
+                bill_items: []
             }
         case LOGOUT_USER:
             console.log('logout, ', action.payload)

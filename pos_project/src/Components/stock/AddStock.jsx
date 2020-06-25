@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { addItemToStock } from '../../Redux/Actions';
 import { connect } from "react-redux";
+import { v4 as uuidv4 } from 'uuid';
 
 class AddStock extends Component {
     constructor(props) {
@@ -117,9 +118,9 @@ class AddStock extends Component {
                                 })
                             }
                         >
-                            <option selected>Open this select menu</option>
+                            <option defaultValue>Open this select menu</option>
                             {
-                                supplierData.data && supplierData.data.map(sup => <option value={sup[0]}>{sup[1]}</option>)
+                                supplierData.data && supplierData.data.map(sup => <option key={sup[0]} value={sup[0]}>{sup[1]}</option>)
                             }
                         </select>
                     </div>

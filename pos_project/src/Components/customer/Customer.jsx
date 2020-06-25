@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { getCustomerData } from '../../Redux/Actions';
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 class Customer extends Component {
     componentDidMount = () => {
@@ -8,7 +9,7 @@ class Customer extends Component {
         this.props.getCustomerData(email)
     }
     render() {
-        const { customerData } = this.props
+        const { customerData,match } = this.props
         return (
             <div className='container m-5'>
                 <table className="table">
@@ -24,7 +25,7 @@ class Customer extends Component {
                         {
                             customerData.data && customerData.data.map(item => (
                                 <tr>
-                                    <td>{item[3]}</td>
+                                    <Link to={`${match.url}/${item[5]}`}><td>{item[3]}</td></Link>
                                     <td>{item[4]}</td>
                                     <td>{item[2]}</td>
                                     <td>{item[1]}</td>

@@ -5,6 +5,7 @@ from flask_mysqldb import MySQL
 import json
 import time
 from flask_cors import CORS
+import time
 
 
 app = Flask(__name__)
@@ -31,11 +32,22 @@ def user_inventory(email):
         data.append(row)
     return json.dumps(data)
 
+# send customer invoice
+@app.route('/user/customer/bill/<b_id>')
+def customer_invoice(b_id):
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT b.id as bill_id, b.amount as bill_amount,b.created_at as bill_date,c.id as customer_id,c.name as customer_name,c.contact as customer_contact,c.email as customer_email, s.item_name as stock_name,s.price_per_unit_selling as stock_price,s.tax as stock_tax,bi.qty as stock_qty FROM bill AS b JOIN customer AS c ON b.customer_id=c.id JOIN bill_items as bi on b.id=bi.bill_id JOIN stock as s on bi.stock_id=s.id WHERE b.id = "%d";'''%(int(b_id)))
+    result = cur.fetchall()
+    data = []
+    for row in result:
+        data.append(row)
+    return json.dumps(data, default=str)
+
 # sending customers data or bill data
 @app.route('/user/customer/<email>')
 def user_customers(email):
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT u.organisation, b.amount, b.created_at, c.name, c.contact, b.id FROM user as u JOIN bill as b ON u.id = b.user_id JOIN customer as c ON b.customer_id = c.id WHERE u.email = "%s";'''%(email))
+    cur.execute('''SELECT u.organisation, b.amount, b.created_at, c.name, c.contact, b.id, c.id FROM user as u JOIN bill as b ON u.id = b.user_id JOIN customer as c ON b.customer_id = c.id WHERE u.email = "%s";'''%(email))
     result = cur.fetchall()
     data = []
     for row in result:
@@ -120,6 +132,44 @@ def customer_add_return():
             data.append(row)
         
         return json.dumps(data)
+    
+# adding Bill
+@app.route("/customer/add/bill", methods = ["POST"])
+def addCustomerBill():
+    customer_id = int(request.json["customer_id"])
+    stockitems_and_qty = request.json["stockitems_and_qty"]    
+    now = time.strftime('%Y-%m-%d %H:%M:%S')
+    user_id = int(request.json["user_id"])
+    amount = float(request.json["amount"])
+    
+    cur = mysql.connection.cursor()
+    cur.execute('''INSERT INTO bill(amount,customer_id,created_at,user_id) VALUES('%f','%d','%s','%d')'''%(amount,customer_id,now,user_id))
+    mysql.connection.commit()
+    cur.close()
+    
+    cur = mysql.connection.cursor()
+    cur.execute('''select id from bill WHERE customer_id = '%d' AND created_at = '%s';'''%(customer_id,now))
+    result = cur.fetchall()
+    
+    bill_id = None
+    for row in result:
+        bill_id = row[0]
+    
+    for i in range(len(stockitems_and_qty)):
+        qty = int(stockitems_and_qty[i][1])
+        st_id = stockitems_and_qty[i][0][7]
+        
+        cur = mysql.connection.cursor()
+        cur.execute('''UPDATE stock SET qty = qty-%d WHERE id= "%d";'''%(qty,st_id))
+        mysql.connection.commit()
+        cur.close()
+        
+        cur = mysql.connection.cursor()
+        cur.execute('''INSERT INTO bill_items(stock_id,qty,bill_id) VALUES ("%d","%d","%d");'''%(st_id,qty,bill_id))
+        mysql.connection.commit()
+        cur.close()
+
+    return {'message' : 'Bill added'}
 
 # adding items to stocks
 @app.route("/user/stock/add", methods = ["POST"])
@@ -131,13 +181,23 @@ def addItemToStock():
     tax = request.json["tax"]
     supplier = request.json['supplier']
     user_id = request.json['user_id']
+    now = time.strftime('%Y-%m-%d %H:%M:%S')
     
     cur = mysql.connection.cursor()
-
-    cur.execute('''INSERT INTO stock(supplier_id,item_name,price_per_unit_purchased,price_per_unit_selling,user_id,tax,qty) VALUES ("%s","%s","%s","%s","%s","%s","%s");'''%(supplier,item_name,ppu,spu,user_id,tax,qty))
+    cur.execute('''INSERT INTO stock(supplier_id,item_name,price_per_unit_purchased,price_per_unit_selling,user_id,tax,qty,created_at) VALUES ("%d","%s","%d","%d","%d","%d","%d","%s");'''%(supplier,item_name,ppu,spu,user_id,tax,qty,now))
     mysql.connection.commit()
     cur.close()
-
+    
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT price_per_unit_purchased,id,created_at,tax,qty FROM stock WHERE item_name = "%s" AND price_per_unit_purchased = "%d" AND price_per_unit_selling = "%d";'''%(item_name,ppu,spu))
+    result = cur.fetchall()
+    data = []
+    for row in result:
+        cur = mysql.connection.cursor()
+        cur.execute('''INSERT INTO expenses(amount,stock_id,created_at,tax,qty) VALUES ("%d","%d","%s","%d","%d");'''%(int(row[0]),int(row[1]),row[2],int(row[3]),int(row[4])))
+        mysql.connection.commit()
+        cur.close()
+        
     return {'message' : 'Item added'}
 
 # edit item in stock
@@ -256,3 +316,4 @@ def auth_check():
     data = jwt.decode(auth_token, key)
 
     return json.dumps(data)
+

@@ -35,9 +35,16 @@ import {
     LOGOUT_USER,
     ADD_ITEM_TO_BILL,
     REMOVE_ITEM_BILL,
+    REMOVE_ALLITEM_BILL,
     ADDCUSTOMER_REQ,
     ADDCUSTOMER_SUCCESS,
-    ADDCUSTOMER_FAIL
+    ADDCUSTOMER_FAIL,
+    ADDCUSTOMER_BILL_REQ,
+    ADDCUSTOMER_BILL_SUCCESS,
+    ADDCUSTOMER_BILL_FAIL,
+    GETCUSTOMER_BILL_REQ,
+    GETCUSTOMER_BILL_SUCCESS,
+    GETCUSTOMER_BILL_FAIL
 } from "./Actiontypes";
 
 import axios from 'axios'
@@ -49,6 +56,11 @@ export const addItemToBill = payload => ({
 
 export const removeItemBill = payload => ({
     type: REMOVE_ITEM_BILL,
+    payload: payload
+})
+
+export const removeAllItemBill = payload => ({
+    type: REMOVE_ALLITEM_BILL,
     payload: payload
 })
 
@@ -237,6 +249,36 @@ export const addCustomerFail = payload => ({
     payload: payload
 })
 
+export const addCustomerBillReq = payload => ({
+    type: ADDCUSTOMER_BILL_REQ,
+    payload: payload
+})
+
+export const addCustomerBillSuccess = payload => ({
+    type: ADDCUSTOMER_BILL_SUCCESS,
+    payload: payload
+})
+
+export const addCustomerBillFail = payload => ({
+    type: ADDCUSTOMER_BILL_FAIL,
+    payload: payload
+})
+
+export const getCustomerBillReq = payload => ({
+    type: GETCUSTOMER_BILL_REQ,
+    payload: payload
+})
+
+export const getCustomerBillSuccess = payload => ({
+    type: GETCUSTOMER_BILL_SUCCESS,
+    payload: payload
+})
+
+export const getCustomerBillFail = payload => ({
+    type: GETCUSTOMER_BILL_FAIL,
+    payload: payload
+})
+
 export const geInventorytData = (payload) => {
     return dispatch => {
         dispatch(getInventoryReq());
@@ -317,12 +359,12 @@ export const addItemToStock = (payload) => {
             .post(`http://127.0.0.1:5000/user/stock/add`,
                 {
                     item_name: payload.item_name,
-                    ppu: payload.ppu,
-                    spu: payload.spu,
-                    qty: payload.qty,
-                    tax: payload.tax,
-                    supplier: payload.supplier,
-                    user_id: payload.user_id
+                    ppu: Number(payload.ppu),
+                    spu: Number(payload.spu),
+                    qty: Number(payload.qty),
+                    tax: Number(payload.tax),
+                    supplier: Number(payload.supplier),
+                    user_id: Number(payload.user_id)
                 }
             )
             .then(res => {
@@ -440,3 +482,35 @@ export const addCustomer = (payload) => {
             .catch(err => dispatch(addCustomerFail(err)));
     };
 };
+
+export const addCustomerBill = (payload) => {
+    console.log('bill send',payload)
+    return dispatch => {
+        dispatch(addCustomerBillReq());
+        return axios
+            .post(`http://127.0.0.1:5000/customer/add/bill`,
+                {
+                    customer_id: Number(payload.customer_id),
+                    stockitems_and_qty: payload.stockitems_and_qty,
+                    user_id: payload.user_id,
+                    amount: payload.amount
+                }
+            )
+            .then(res => {
+                return dispatch(addCustomerBillSuccess(res));
+            })
+            .catch(err => dispatch(addCustomerBillFail(err)));
+    };
+};
+
+export const getCustomerBill = (payload) => {
+    return dispatch => {
+        dispatch(getCustomerBillReq());
+        return axios
+            .get(`http://127.0.0.1:5000/user/customer/bill/${payload}`)
+            .then(res => {
+                return dispatch(getCustomerBillSuccess(res));
+            })
+            .catch(err => dispatch(getCustomerBillFail(err)));
+    }
+}
