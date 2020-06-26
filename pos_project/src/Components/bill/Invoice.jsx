@@ -41,7 +41,6 @@ class Invoice extends Component {
     render() {
         const { addCustomerBill, removeAllItemBill, address, organisation, contact, email, billing_customer, bill_items } = this.props
         var tempDate = new Date();
-        console.log('invoice ', this.state)
         var date = tempDate.getFullYear() + ':' + (tempDate.getMonth() + 1) + ':' + tempDate.getDate() + ' ' + tempDate.getHours() + ':' + tempDate.getMinutes() + ':' + tempDate.getSeconds();
         return (
             <div>

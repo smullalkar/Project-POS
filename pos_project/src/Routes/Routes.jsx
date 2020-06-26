@@ -16,6 +16,7 @@ import EditStock from '../Components/stock/EditStock';
 import Bill from '../Components/bill/Bill';
 import Invoice from '../Components/bill/Invoice';
 import CustomerInvoice from '../Components/customer/CustomerInvoice';
+import Reports from '../Components/reports/Reports';
 
 export default class Routes extends Component {
     render() {
@@ -40,6 +41,7 @@ export default class Routes extends Component {
                     <Route exact path='/user/customer' component={Customer}></Route>
                     <Route path='/user/customer/:id' component={CustomerInvoice}></Route>
                     <Route path='/user/bill' component={Bill}></Route>
+                    <Route path='/user/reports' component={Reports}></Route>
                     <Route path='/user/invoice' component={Invoice}></Route>
                     {/* <Route path='/users/listing/show/:id' exact component={UserDetails}></Route>
                     <Route path='/users/listing/show/:id/edit/:id' component={EditUser}></Route>

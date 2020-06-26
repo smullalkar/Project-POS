@@ -44,7 +44,13 @@ import {
     ADDCUSTOMER_BILL_FAIL,
     GETCUSTOMER_BILL_REQ,
     GETCUSTOMER_BILL_SUCCESS,
-    GETCUSTOMER_BILL_FAIL
+    GETCUSTOMER_BILL_FAIL,
+    GETMONTHLY_SALES_REQ,
+    GETMONTHLY_SALES_SUCCESS,
+    GETMONTHLY_SALES_FAIL,
+    GETALL_SALES_REQ,
+    GETALL_SALES_SUCCESS,
+    GETALL_SALES_FAIL
 } from "./Actiontypes";
 
 import axios from 'axios'
@@ -279,6 +285,36 @@ export const getCustomerBillFail = payload => ({
     payload: payload
 })
 
+export const getMonthlySalesReq = payload => ({
+    type: GETMONTHLY_SALES_REQ,
+    payload: payload
+})
+
+export const getMonthlySalesSuccess = payload => ({
+    type: GETMONTHLY_SALES_SUCCESS,
+    payload: payload
+})
+
+export const getMonthlySalesFail = payload => ({
+    type: GETMONTHLY_SALES_FAIL,
+    payload: payload
+})
+
+export const getAllSalesReq = payload => ({
+    type: GETALL_SALES_REQ,
+    payload: payload
+})
+
+export const getAllSalesSuccess = payload => ({
+    type: GETALL_SALES_SUCCESS,
+    payload: payload
+})
+
+export const getAllSalesFail = payload => ({
+    type: GETALL_SALES_FAIL,
+    payload: payload
+})
+
 export const geInventorytData = (payload) => {
     return dispatch => {
         dispatch(getInventoryReq());
@@ -484,7 +520,7 @@ export const addCustomer = (payload) => {
 };
 
 export const addCustomerBill = (payload) => {
-    console.log('bill send',payload)
+    console.log('bill send', payload)
     return dispatch => {
         dispatch(addCustomerBillReq());
         return axios
@@ -512,5 +548,46 @@ export const getCustomerBill = (payload) => {
                 return dispatch(getCustomerBillSuccess(res));
             })
             .catch(err => dispatch(getCustomerBillFail(err)));
+    }
+}
+
+export const getMonthlySales = (payload) => {
+    return dispatch => {
+        dispatch(getMonthlySalesReq());
+        return axios
+            .get(`http://127.0.0.1:5000/user/monthlysales/${payload.month_selected}/${payload.year_selected}`)
+            .then(res => {
+                return dispatch(getMonthlySalesSuccess(res));
+            })
+            .catch(err => dispatch(getMonthlySalesFail(err)));
+    }
+}
+
+function convert(str) {
+    let date = new Date(str);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let dt = date.getDate();
+
+    if (dt < 10) {
+        dt = '0' + dt;
+    }
+    if (month < 10) {
+        month = '0' + month;
+    }
+    return (year+'-'+month+'-'+dt).toString()
+}
+
+export const getAllSales = (payload) => {
+    return dispatch => {
+        dispatch(getAllSalesReq());
+        let date_payload = convert(payload)
+        console.log('date payload ', date_payload)
+        return axios
+            .get(`http://127.0.0.1:5000/user/allsales/${date_payload}`)
+            .then(res => {
+                return dispatch(getAllSalesSuccess(res));
+            })
+            .catch(err => dispatch(getAllSalesFail(err)));
     }
 }

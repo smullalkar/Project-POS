@@ -6,7 +6,7 @@ import json
 import time
 from flask_cors import CORS
 import time
-
+import datetime
 
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'localhost'
@@ -30,6 +30,42 @@ def user_inventory(email):
     data = []
     for row in result:
         data.append(row)
+    return json.dumps(data)
+
+# sending monthly sales data
+@app.route('/user/monthlysales/<month>/<year>')
+def monthlysales(month,year):
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT SUM(amount) FROM bill WHERE MONTH(created_at) = "%s" AND YEAR(created_at) = "%s";'''%(month,year))
+    result = cur.fetchall()
+    data = []
+    for row in result:
+        data.append(row)
+        
+    cur1 = mysql.connection.cursor()
+    cur1.execute('''select SUM(((amount+(amount*(tax/100)))*qty)) from expenses WHERE MONTH(created_at) = "%s" AND YEAR(created_at) = "%s";'''%(month,year))
+    result1 = cur1.fetchall()
+    for row1 in result1:
+        data.append(row1)
+    
+    return json.dumps(data)
+
+# sending all sales data
+@app.route('/user/allsales/<date>')
+def allsales(date):
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT SUM(amount) FROM bill WHERE date(created_at) = "%s";'''%(date))
+    result = cur.fetchall()
+    data = []
+    for row in result:
+        data.append(row)
+    
+    cur1 = mysql.connection.cursor()
+    cur1.execute('''select SUM(((amount+(amount*(tax/100)))*qty)) from expenses WHERE date(created_at) = "%s";'''%(date))
+    result1 = cur1.fetchall()
+    for row1 in result1:
+        data.append(row1)
+    
     return json.dumps(data)
 
 # send customer invoice
@@ -165,7 +201,7 @@ def addCustomerBill():
         cur.close()
         
         cur = mysql.connection.cursor()
-        cur.execute('''INSERT INTO bill_items(stock_id,qty,bill_id) VALUES ("%d","%d","%d");'''%(st_id,qty,bill_id))
+        cur.execute('''INSERT INTO bill_items(stock_id,qty,bill_id,created_at) VALUES ("%d","%d","%d","%s");'''%(st_id,qty,bill_id,now))
         mysql.connection.commit()
         cur.close()
 

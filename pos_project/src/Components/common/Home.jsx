@@ -3,6 +3,7 @@ import Stockcard from './Stockcard'
 import Suppliercard from './Suppliercard'
 import Customercard from './Customercard'
 import Billgenerator from './Billgenerator'
+import ReportCard from './ReportCard'
 import { connect } from "react-redux";
 import { geInventorytData, getSupplierData, getCustomerData } from '../../Redux/Actions';
 
@@ -31,6 +32,9 @@ class Home extends Component {
                     </div>
                     <div className='m-5'>
                         <Billgenerator />
+                    </div>
+                    <div className='m-5'>
+                        <ReportCard/>
                     </div>
                 </div>
             )

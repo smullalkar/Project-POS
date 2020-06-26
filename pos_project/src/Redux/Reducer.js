@@ -41,7 +41,13 @@ import {
     ADDCUSTOMER_BILL_FAIL,
     GETCUSTOMER_BILL_REQ,
     GETCUSTOMER_BILL_SUCCESS,
-    GETCUSTOMER_BILL_FAIL
+    GETCUSTOMER_BILL_FAIL,
+    GETMONTHLY_SALES_REQ,
+    GETMONTHLY_SALES_SUCCESS,
+    GETMONTHLY_SALES_FAIL,
+    GETALL_SALES_REQ,
+    GETALL_SALES_SUCCESS,
+    GETALL_SALES_FAIL
 } from "./Actiontypes";
 
 export const initStore = {
@@ -56,12 +62,48 @@ export const initStore = {
     bill_items: [],
     billing_customer: [],
     billadded: false,
-    customerBill: []
+    customerBill: [],
+    monthlySales: [],
+    allSales: []
 };
 
 export default (state = initStore, action) => {
     console.log('action called', action.payload);
     switch (action.type) {
+        case GETALL_SALES_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case GETALL_SALES_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                allSales: action.payload
+            };
+        case GETALL_SALES_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
+        case GETMONTHLY_SALES_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case GETMONTHLY_SALES_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                monthlySales: action.payload
+            };
+        case GETMONTHLY_SALES_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
         case GETCUSTOMER_BILL_REQ:
             return {
                 ...state,
