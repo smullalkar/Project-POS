@@ -50,7 +50,10 @@ import {
     GETMONTHLY_SALES_FAIL,
     GETALL_SALES_REQ,
     GETALL_SALES_SUCCESS,
-    GETALL_SALES_FAIL
+    GETALL_SALES_FAIL,
+    GETYEAR_SALES_REQ,
+    GETYEAR_SALES_SUCCESS,
+    GETYEAR_SALES_FAIL
 } from "./Actiontypes";
 
 import axios from 'axios'
@@ -315,6 +318,21 @@ export const getAllSalesFail = payload => ({
     payload: payload
 })
 
+export const getYearSalesReq = payload => ({
+    type: GETYEAR_SALES_REQ,
+    payload: payload
+})
+
+export const getYearSalesSuccess = payload => ({
+    type: GETYEAR_SALES_SUCCESS,
+    payload: payload
+})
+
+export const getYearSalesFail = payload => ({
+    type: GETYEAR_SALES_FAIL,
+    payload: payload
+})
+
 export const geInventorytData = (payload) => {
     return dispatch => {
         dispatch(getInventoryReq());
@@ -555,7 +573,7 @@ export const getMonthlySales = (payload) => {
     return dispatch => {
         dispatch(getMonthlySalesReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/monthlysales/${payload.month_selected}/${payload.year_selected}`)
+            .get(`http://127.0.0.1:5000/user/monthlysales/${payload.user_id}/${payload.month_selected}/${payload.year_selected}`)
             .then(res => {
                 return dispatch(getMonthlySalesSuccess(res));
             })
@@ -584,10 +602,22 @@ export const getAllSales = (payload) => {
         let date_payload = convert(payload)
         console.log('date payload ', date_payload)
         return axios
-            .get(`http://127.0.0.1:5000/user/allsales/${date_payload}`)
+            .get(`http://127.0.0.1:5000/user/allsales/${payload.user_id}/${date_payload.sendData}`)
             .then(res => {
                 return dispatch(getAllSalesSuccess(res));
             })
             .catch(err => dispatch(getAllSalesFail(err)));
+    }
+}
+
+export const getYearSales = (payload) => {
+    return dispatch => {
+        dispatch(getYearSalesReq());
+        return axios
+            .get(`http://127.0.0.1:5000/user/monthlysales/${payload.user_id}/${payload.year}`)
+            .then(res => {
+                return dispatch(getYearSalesSuccess(res));
+            })
+            .catch(err => dispatch(getYearSalesFail(err)));
     }
 }

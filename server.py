@@ -33,10 +33,10 @@ def user_inventory(email):
     return json.dumps(data)
 
 # sending monthly sales data
-@app.route('/user/monthlysales/<month>/<year>')
-def monthlysales(month,year):
+@app.route('/user/monthlysales/<user_id>/<month>/<year>')
+def monthlysales(user_id,month,year):
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT SUM(amount) FROM bill WHERE MONTH(created_at) = "%s" AND YEAR(created_at) = "%s";'''%(month,year))
+    cur.execute('''SELECT SUM(amount) FROM bill WHERE MONTH(created_at) = "%s" AND YEAR(created_at) = "%s" AND user_id = "%d";'''%(month,year,user_id))
     result = cur.fetchall()
     data = []
     for row in result:
@@ -50,11 +50,11 @@ def monthlysales(month,year):
     
     return json.dumps(data)
 
-# sending all sales data
-@app.route('/user/allsales/<date>')
-def allsales(date):
+# sending any day sales data
+@app.route('/user/allsales/<user_id>/<date>')
+def allsales(user_id,date):
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT SUM(amount) FROM bill WHERE date(created_at) = "%s";'''%(date))
+    cur.execute('''SELECT SUM(amount) FROM bill WHERE date(created_at) = "%s" AND user_id = "%d";'''%(date,user_id))
     result = cur.fetchall()
     data = []
     for row in result:
@@ -65,6 +65,24 @@ def allsales(date):
     result1 = cur1.fetchall()
     for row1 in result1:
         data.append(row1)
+    
+    return json.dumps(data)
+
+# sending year sales data
+@app.route('/user/yearsales/<user_id>/<year>')
+def yearsales(user_id,year):
+    cur = mysql.connection.cursor()
+    cur.execute('''select SUM(amount), MONTH(created_at),user_id,YEAR(created_at) from bill WHERE YEAR(created_at)='%s' GROUP BY MONTH(created_at),user_id,YEAR(created_at) HAVING user_id="%d";'''%(year,user_id))
+    result = cur.fetchall()
+    data = []
+    for row in result:
+        data.append(row)
+    
+    # cur1 = mysql.connection.cursor()
+    # cur1.execute('''select SUM(((amount+(amount*(tax/100)))*qty)) from expenses WHERE date(created_at) = "%s";'''%(date))
+    # result1 = cur1.fetchall()
+    # for row1 in result1:
+    #     data.append(row1)
     
     return json.dumps(data)
 
@@ -230,7 +248,7 @@ def addItemToStock():
     data = []
     for row in result:
         cur = mysql.connection.cursor()
-        cur.execute('''INSERT INTO expenses(amount,stock_id,created_at,tax,qty) VALUES ("%d","%d","%s","%d","%d");'''%(int(row[0]),int(row[1]),row[2],int(row[3]),int(row[4])))
+        cur.execute('''INSERT INTO expenses(amount,stock_id,created_at,tax,qty,user_id) VALUES ("%d","%d","%s","%d","%d","%d");'''%(int(row[0]),int(row[1]),row[2],int(row[3]),int(row[4],user_id)))
         mysql.connection.commit()
         cur.close()
         

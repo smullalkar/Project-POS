@@ -13,12 +13,23 @@ import {
 } from 'react-vis';
 
 class MonthlySales extends React.Component {
-    state = {
-        month_selected: '',
-        month_name: '',
-        year_selected: '',
-        useCanvas: false,
-    };
+    constructor(props){
+        super(props)
+
+        this.state = {
+            month_selected: '',
+            month_name: '',
+            year_selected: '',
+            useCanvas: false,
+            user_id: ''
+        };
+    }
+
+    componentDidMount = ()=>{
+        this.setState({
+            user_id: this.props.id
+        })
+    }
 
     render() {
         const { getMonthlySales, monthlySales } = this.props
@@ -119,7 +130,8 @@ class MonthlySales extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        monthlySales: state.monthlySales
+        monthlySales: state.monthlySales,
+        id: state.loginData.data.id
     };
 };
 

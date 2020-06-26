@@ -16,11 +16,15 @@ import {
 
 
 class AllSales extends Component {
-    state = {
-        startDate: new Date(),
-        sendDate: '',
-        useCanvas: false,
-    };
+    constructor(props){
+        super(props)
+        this.state = {
+            startDate: new Date(),
+            sendDate: '',
+            useCanvas: false,
+            user_id:''
+        };
+    }
 
     handleChange = date => {
         this.setState({
@@ -29,8 +33,14 @@ class AllSales extends Component {
         });
     };
 
+    componentDidMount = ()=>{
+        this.setState({
+            user_id: this.props.id
+        })
+    }
+
     render() {
-        const { getAllSales, allSales } = this.props
+        const { getAllSales, allSales, id } = this.props
         const { useCanvas } = this.state
         const BarSeries = useCanvas ? VerticalBarSeriesCanvas : VerticalBarSeries;
 
@@ -71,7 +81,7 @@ class AllSales extends Component {
                     />
                     <button
                         className='mx-3 btn btn-primary'
-                        onClick={() => getAllSales(this.state.sendDate)}
+                        onClick={() => getAllSales(this.state)}
                     >
                         SUBMIT
                     </button>
@@ -100,7 +110,8 @@ class AllSales extends Component {
 const mapStateToProps = state => {
     console.log("state :", state)
     return {
-        allSales: state.allSales
+        allSales: state.allSales,
+        id: state.loginData.data.id
     };
 };
 

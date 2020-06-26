@@ -47,7 +47,10 @@ import {
     GETMONTHLY_SALES_FAIL,
     GETALL_SALES_REQ,
     GETALL_SALES_SUCCESS,
-    GETALL_SALES_FAIL
+    GETALL_SALES_FAIL,
+    GETYEAR_SALES_REQ,
+    GETYEAR_SALES_SUCCESS,
+    GETYEAR_SALES_FAIL
 } from "./Actiontypes";
 
 export const initStore = {
@@ -64,12 +67,30 @@ export const initStore = {
     billadded: false,
     customerBill: [],
     monthlySales: [],
-    allSales: []
+    allSales: [],
+    yearSales: []
 };
 
 export default (state = initStore, action) => {
     console.log('action called', action.payload);
     switch (action.type) {
+        case GETYEAR_SALES_REQ:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case GETYEAR_SALES_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                yearSales: action.payload
+            };
+        case GETYEAR_SALES_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload
+            };
         case GETALL_SALES_REQ:
             return {
                 ...state,
