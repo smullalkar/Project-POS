@@ -9,10 +9,9 @@ import { geInventorytData, getSupplierData, getCustomerData } from '../../Redux/
 
 class Home extends Component {
     componentDidMount = () => {
-        const { email } = this.props
+        const { email,id } = this.props
         this.props.geInventorytData(email)
         this.props.getSupplierData(email)
-        this.props.getCustomerData(email)
     }
     render() {
         const {isLoggedin} = this.props
@@ -55,7 +54,6 @@ const mapDispatchToProps = dispatch => {
     return {
         geInventorytData: a => dispatch(geInventorytData(a)),
         getSupplierData: a => dispatch(getSupplierData(a)),
-        getCustomerData: a => dispatch(getCustomerData(a))
     };
 };
 

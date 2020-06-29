@@ -33,7 +33,7 @@ const mapStateToProps = state => {
     return {
         isLoggedin: state.isLoggedin,
         email: state.loginData.data.email,
-        id: state.loginData.data.id,
+        id: state.loginData.data.id
     };
 };
 

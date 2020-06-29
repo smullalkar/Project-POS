@@ -68,7 +68,10 @@ export const initStore = {
     customerBill: [],
     monthlySales: [],
     allSales: [],
-    yearSales: []
+    yearSales: [],
+    page: 1,
+    perPage: 1,
+    total_pages: ''
 };
 
 export default (state = initStore, action) => {
@@ -316,7 +319,9 @@ export default (state = initStore, action) => {
             return {
                 ...state,
                 isLoading: false,
-                customerData: action.payload
+                customerData: action.payload,
+                total_pages: action.payload.data.total_pages,
+                page: action.payload.data.curr_page,
             };
         case GET_CUSTOMER_FAIL:
             return {

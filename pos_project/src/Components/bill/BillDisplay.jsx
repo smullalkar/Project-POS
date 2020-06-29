@@ -33,13 +33,6 @@ const mapStateToProps = state => {
     };
 };
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         removeItem: a => dispatch(removeItem(a)),
-//     };
-// };
-
 export default connect(
     mapStateToProps
-    // mapDispatchToProps
 )(BillDisplay);

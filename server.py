@@ -7,6 +7,7 @@ import time
 from flask_cors import CORS
 import time
 import datetime
+import math
 
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'localhost'
@@ -72,7 +73,7 @@ def allsales(user_id,date):
 @app.route('/user/yearsales/<user_id>/<year>')
 def yearsales(user_id,year):
     cur = mysql.connection.cursor()
-    cur.execute('''select SUM(amount), MONTH(created_at),user_id,YEAR(created_at) from bill WHERE YEAR(created_at)='%s' GROUP BY MONTH(created_at),user_id,YEAR(created_at) HAVING user_id="%d";'''%(year,user_id))
+    cur.execute('''select SUM(amount), MONTH(created_at),user_id,YEAR(created_at) from bill WHERE YEAR(created_at)='%s' GROUP BY MONTH(created_at),user_id,YEAR(created_at) HAVING user_id="%d";'''%(year,int(user_id)))
     result = cur.fetchall()
     data = []
     for row in result:
@@ -98,15 +99,33 @@ def customer_invoice(b_id):
     return json.dumps(data, default=str)
 
 # sending customers data or bill data
-@app.route('/user/customer/<email>')
-def user_customers(email):
+@app.route('/user/customer')
+def user_customers():
+    # cur = mysql.connection.cursor()
+    # cur.execute('''SELECT u.organisation, b.amount, b.created_at, c.name, c.contact, b.id, c.id FROM user as u JOIN bill as b ON u.id = b.user_id JOIN customer as c ON b.customer_id = c.id WHERE u.email = "%s";'''%(email))
+    # result = cur.fetchall()
+    # data = []
+    # for row in result:
+    #     data.append(row)
+    # return json.dumps(data, default=str)
+    user_id = request.args.get('user_id', type = int)
+    page = request.args.get('page', type = int)
+    per_page = request.args.get('per_page',type = int)
+
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT u.organisation, b.amount, b.created_at, c.name, c.contact, b.id, c.id FROM user as u JOIN bill as b ON u.id = b.user_id JOIN customer as c ON b.customer_id = c.id WHERE u.email = "%s";'''%(email))
+    cur.execute('''SELECT u.organisation, b.amount, b.created_at, c.name, c.contact, b.id, c.id FROM user as u JOIN bill as b ON u.id = b.user_id JOIN customer as c ON b.customer_id = c.id WHERE u.id = %d ;'''%(user_id))
     result = cur.fetchall()
-    data = []
+    
+    data=[]
     for row in result:
         data.append(row)
-    return json.dumps(data, default=str)
+    
+    curr_page = page
+    total_pages = math.ceil(len(data)/per_page)
+    prev_page_end = (curr_page-1) * per_page
+    curr_page_end = curr_page * per_page
+    curr_page_items = data[prev_page_end:curr_page_end]
+    return json.dumps({'data':curr_page_items,'total_pages':total_pages, 'curr_page':curr_page},default=str)
 
 # sending suppliers data
 @app.route('/user/supplier/<user_email>')
@@ -371,3 +390,22 @@ def auth_check():
 
     return json.dumps(data)
 
+# pagination
+@app.route('/user/customers/pagination')
+def h():
+    user_id = request.args.get('user_id', type = int)
+    page = request.args.get('page', type = int)
+    per_page = request.args.get('per_page',type = int)
+
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT u.organisation, b.amount, b.created_at, c.name, c.contact, b.id, c.id FROM user as u JOIN bill as b ON u.id = b.user_id JOIN customer as c ON b.customer_id = c.id WHERE u.id=%d;'''%(user_id))
+    result = cur.fetchall()
+    
+    data=[]
+    for row in result:
+        data.append(row)
+    
+    total_items=len(data)
+    prev_page=(page-1)*per_page
+    curr_page=page*per_page
+    return json.dumps({'data':data[prev_page:curr_page]},default=str)

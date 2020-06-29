@@ -53,10 +53,22 @@ import {
     GETALL_SALES_FAIL,
     GETYEAR_SALES_REQ,
     GETYEAR_SALES_SUCCESS,
-    GETYEAR_SALES_FAIL
+    GETYEAR_SALES_FAIL,
+    CHANGE_PAGE_NO,
+    CHANGE_PERPAGE_NO
 } from "./Actiontypes";
 
 import axios from 'axios'
+
+export const changePage = payload => ({
+    type: CHANGE_PAGE_NO,
+    payload
+})
+
+export const changePerPage = payload => ({
+    type: CHANGE_PERPAGE_NO,
+    payload
+})
 
 export const addItemToBill = payload => ({
     type: ADD_ITEM_TO_BILL,
@@ -346,10 +358,17 @@ export const geInventorytData = (payload) => {
 }
 
 export const getCustomerData = (payload) => {
+    console.log(payload)
     return dispatch => {
         dispatch(getCustomerReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/customer/${payload}`)
+            .get(`http://127.0.0.1:5000/user/customer`,{
+                params: {
+                    user_id: Number(payload.user_id),
+                    page: Number(payload.curr_page),
+                    per_page: Number(payload.per_page)
+                }
+            })
             .then(res => {
                 return dispatch(getCustomerSuccess(res));
             })
@@ -593,7 +612,7 @@ function convert(str) {
     if (month < 10) {
         month = '0' + month;
     }
-    return (year+'-'+month+'-'+dt).toString()
+    return (year + '-' + month + '-' + dt).toString()
 }
 
 export const getAllSales = (payload) => {
@@ -614,7 +633,7 @@ export const getYearSales = (payload) => {
     return dispatch => {
         dispatch(getYearSalesReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/monthlysales/${payload.user_id}/${payload.year}`)
+            .get(`http://127.0.0.1:5000/user/yearsales/${payload.user_id}/${payload.year_selected}`)
             .then(res => {
                 return dispatch(getYearSalesSuccess(res));
             })

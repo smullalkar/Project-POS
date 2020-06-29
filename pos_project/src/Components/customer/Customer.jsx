@@ -2,12 +2,9 @@ import React, { Component } from 'react'
 import { getCustomerData } from '../../Redux/Actions';
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import Pagination from '../Pagination/Pagination';
 
 class Customer extends Component {
-    componentDidMount = () => {
-        const { email } = this.props
-        this.props.getCustomerData(email)
-    }
     render() {
         const { customerData,match } = this.props
         return (
@@ -23,7 +20,7 @@ class Customer extends Component {
                     </thead>
                     <tbody>
                         {
-                            customerData.data && customerData.data.map(item => (
+                            customerData.data && customerData.data.data.map(item => (
                                 <tr>
                                     <Link to={`${match.url}/${item[5]}`}><td>{item[3]}</td></Link>
                                     <td>{item[4]}</td>
@@ -34,6 +31,7 @@ class Customer extends Component {
                         }
                     </tbody>
                 </table>
+                <Pagination/>
             </div>
         )
     }
@@ -43,15 +41,10 @@ const mapStateToProps = state => {
     console.log('customerData', state.customerData)
     return {
         customerData: state.customerData,
-        email: state.loginData.data.email
+        id: state.loginData.data.id
     };
 };
-const mapDispatchToProps = dispatch => {
-    return {
-        getCustomerData: a => dispatch(getCustomerData(a))
-    };
-};
+
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 )(Customer);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { loginUser } from '../../Redux/Actions';
 import { connect } from "react-redux";
+import {Redirect} from 'react-router-dom';
 
 class Login extends Component {
     constructor(props) {
@@ -19,58 +20,52 @@ class Login extends Component {
         })
     }
 
-    componentDidUpdate = () => {
-        setTimeout(() => {
-            if(this.props.isLoggedin){
-                this.props.history.push('/home')
-            }
-        }, 300)
-    }
-
     render() {
         const { loginUser, isLoggedin } = this.props
-        const {wrong_pass} = this.state
-        return (
-            <div className='p-5 m-5'>
-                <form
-                    className='col-4 offset-4'
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                        loginUser(this.state)
-                    }}
-                >
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input
-                            name='email'
-                            value={this.state.email}
-                            onChange={this.handleChange}
-                            type="text"
-                            className="form-control"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input
-                            name='password'
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            type="password"
-                            className="form-control"
-                        />
-                    </div>
-                    <div className='d-flex justify-content-center'>
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                        >Submit</button>
-                    </div>
-                    {
-                        wrong_pass ? <div>INCORRECT USERNAME OR PASSWORD</div> : <></>
-                    }
-                </form>
-            </div>
-        )
+        const { wrong_pass } = this.state
+        if (isLoggedin) {
+            return <Redirect to='/home' />;
+        }
+        else {
+            return (
+                <div className='p-5 m-5'>
+                    <form
+                        className='col-4 offset-4'
+                        onSubmit={(e) => {
+                            e.preventDefault()
+                            loginUser(this.state)
+                        }}
+                    >
+                        <div className="form-group">
+                            <label>Email</label>
+                            <input
+                                name='email'
+                                value={this.state.email}
+                                onChange={this.handleChange}
+                                type="text"
+                                className="form-control"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Password</label>
+                            <input
+                                name='password'
+                                value={this.state.password}
+                                onChange={this.handleChange}
+                                type="password"
+                                className="form-control"
+                            />
+                        </div>
+                        <div className='d-flex justify-content-center'>
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                            >Submit</button>
+                        </div>
+                    </form>
+                </div>
+            )
+        }
     }
 }
 

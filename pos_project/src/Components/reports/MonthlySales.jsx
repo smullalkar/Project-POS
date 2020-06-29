@@ -38,7 +38,7 @@ class MonthlySales extends React.Component {
         var currentyear = tempDate.getFullYear()
         var year = []
 
-        for (let i = Number(currentyear); i >= (Number(currentyear) - 25); i--) {
+        for (let i = Number(currentyear); i >= 2000; i--) {
             year.push(i)
         }
         const BarSeries = useCanvas ? VerticalBarSeriesCanvas : VerticalBarSeries;
