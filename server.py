@@ -267,29 +267,41 @@ def addItemToStock():
     data = []
     for row in result:
         cur = mysql.connection.cursor()
-        cur.execute('''INSERT INTO expenses(amount,stock_id,created_at,tax,qty,user_id) VALUES ("%d","%d","%s","%d","%d","%d");'''%(int(row[0]),int(row[1]),row[2],int(row[3]),int(row[4],user_id)))
+        cur.execute('''INSERT INTO expenses(amount,stock_id,created_at,tax,qty,user_id) VALUES ("%d","%d","%s","%d","%d","%d");'''%(int(row[0]),int(row[1]),row[2],int(row[3]),int(row[4]),user_id))
         mysql.connection.commit()
         cur.close()
         
-    return {'message' : 'Item added'}
-
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT u.organisation,u.address,s.item_name,s.price_per_unit_purchased,s.price_per_unit_selling,s.qty, s.tax, s.id, s.supplier_id, sup.name, u.contact, u.email FROM user as u JOIN stock as s ON u.id = s.user_id JOIN supplier as sup on s.supplier_id = sup.id WHERE u.id = "%d";'''%(int(user_id)))
+    result = cur.fetchall()
+    data = []
+    for row in result:
+        data.append(row)
+    return json.dumps(data)
+        
 # edit item in stock
-@app.route("/user/stock/edit/<stock_id>", methods = ["POST"])
+@app.route("/user/stock/edit/<int:stock_id>", methods = ["POST"])
 def editItemToStock(stock_id):
     item_name = request.json["item_name"]
-    ppu = request.json["ppu"]    
-    spu = request.json["spu"]    
-    qty = request.json["qty"]
-    tax = request.json["tax"]
-    supplier_id = request.json['supplier_id']
-    user_id = request.json['user_id']
+    ppu = int(request.json["ppu"])    
+    spu = int(request.json["spu"])    
+    qty = int(request.json["qty"])
+    tax = int(request.json["tax"])
+    supplier_id = int(request.json['supplier_id'])
+    user_id = int(request.json['user_id'])
     cur = mysql.connection.cursor()
 
-    cur.execute('''UPDATE stock SET supplier_id = '%s',item_name = '%s' ,price_per_unit_purchased = '%s', price_per_unit_selling = '%s',user_id = '%s', tax = '%s' ,qty = '%s' WHERE id = %s ;'''%(supplier_id,item_name,ppu,spu,user_id,tax,qty,stock_id))
+    cur.execute('''UPDATE stock SET supplier_id = '%d',item_name = '%s' ,price_per_unit_purchased = '%d', price_per_unit_selling = '%d',user_id = '%d', tax = '%d' ,qty = '%d' WHERE id = %d ;'''%(supplier_id,item_name,ppu,spu,user_id,tax,qty,stock_id))
     mysql.connection.commit()
     cur.close()
 
-    return {'message' : 'Item Edited'}
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT u.organisation,u.address,s.item_name,s.price_per_unit_purchased,s.price_per_unit_selling,s.qty, s.tax, s.id, s.supplier_id, sup.name, u.contact, u.email FROM user as u JOIN stock as s ON u.id = s.user_id JOIN supplier as sup on s.supplier_id = sup.id WHERE u.id = "%d";'''%(int(user_id)))
+    result = cur.fetchall()
+    data = []
+    for row in result:
+        data.append(row)
+    return json.dumps(data)
 
 # adding suppliers
 @app.route("/user/supplier/add", methods = ["POST"])
