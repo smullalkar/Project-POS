@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 class BillItemTable extends Component {
     render() {
         const {bill_items, removeItemBill} = this.props
+        console.log('bill items ', bill_items)
         return (
             <div>
                 <table className="table">

@@ -37,7 +37,7 @@ def user_inventory(email):
 @app.route('/user/monthlysales/<user_id>/<month>/<year>')
 def monthlysales(user_id,month,year):
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT SUM(amount) FROM bill WHERE MONTH(created_at) = "%s" AND YEAR(created_at) = "%s" AND user_id = "%d";'''%(month,year,user_id))
+    cur.execute('''SELECT SUM(amount) FROM bill WHERE MONTH(created_at) = "%s" AND YEAR(created_at) = "%s" AND user_id = "%d";'''%(month,year,int(user_id)))
     result = cur.fetchall()
     data = []
     for row in result:
@@ -54,8 +54,9 @@ def monthlysales(user_id,month,year):
 # sending any day sales data
 @app.route('/user/allsales/<user_id>/<date>')
 def allsales(user_id,date):
+    print(date)
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT SUM(amount) FROM bill WHERE date(created_at) = "%s" AND user_id = "%d";'''%(date,user_id))
+    cur.execute('''SELECT SUM(amount) FROM bill WHERE date(created_at) = "%s" AND user_id = "%d";'''%(date,int(user_id)))
     result = cur.fetchall()
     data = []
     for row in result:

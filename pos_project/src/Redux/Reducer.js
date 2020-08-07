@@ -50,7 +50,8 @@ import {
     GETALL_SALES_FAIL,
     GETYEAR_SALES_REQ,
     GETYEAR_SALES_SUCCESS,
-    GETYEAR_SALES_FAIL
+    GETYEAR_SALES_FAIL,
+    REMOVE
 } from "./Actiontypes";
 
 export const initStore = {
@@ -77,6 +78,13 @@ export const initStore = {
 export default (state = initStore, action) => {
     console.log('action called', action.payload);
     switch (action.type) {
+        case REMOVE:
+            if (action.payload == '') {
+                return {
+                    ...state,
+                    bill_items: [],
+                };
+            }
         case GETYEAR_SALES_REQ:
             return {
                 ...state,
@@ -181,8 +189,8 @@ export default (state = initStore, action) => {
                 })
             }
         case REMOVE_ALLITEM_BILL:
+            console.log('hhh', action.payload)
             return {
-                ...state,
                 bill_items: []
             }
         case LOGOUT_USER:

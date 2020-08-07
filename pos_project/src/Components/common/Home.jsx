@@ -19,13 +19,13 @@ class Home extends Component {
             return (
                 <div className='container'>
                     <div className='row my-5'>
-                        <div className='col-4'>
+                        <div className='col-lg-4 col-md-6 col-sm-12 col-12 mt-3'>
                             <Stockcard />
                         </div>
-                        <div className='col-4'>
+                        <div className='col-lg-4 col-md-6 col-sm-12 col-12 mt-3'>
                             <Suppliercard />
                         </div>
-                        <div className='col-4'>
+                        <div className='col-lg-4 col-md-6 col-sm-12 col-12 mt-3'>
                             <Customercard />
                         </div>
                     </div>

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
-import { addCustomerBill, removeAllItemBill } from '../../Redux/Actions'
+import { addCustomerBill, remove } from '../../Redux/Actions'
 
 class Invoice extends Component {
     constructor(props) {
@@ -38,8 +38,17 @@ class Invoice extends Component {
 
     }
 
+    handleClick = () => {
+        const { addCustomerBill, remove } = this.props
+        addCustomerBill(this.state)
+        remove()
+        setTimeout(() => {
+            this.props.history.push('/home')
+        }, 300)
+    }
+
     render() {
-        const { addCustomerBill, removeAllItemBill, address, organisation, contact, email, billing_customer, bill_items } = this.props
+        const { addCustomerBill, remove, address, organisation, contact, email, billing_customer, bill_items } = this.props
         var tempDate = new Date();
         var date = tempDate.getFullYear() + ':' + (tempDate.getMonth() + 1) + ':' + tempDate.getDate() + ' ' + tempDate.getHours() + ':' + tempDate.getMinutes() + ':' + tempDate.getSeconds();
         return (
@@ -65,10 +74,10 @@ class Invoice extends Component {
                                 <div className="col-sm-6">
                                     <h6 className="mb-3">To:</h6>
                                     <div>
-                                        <strong>{billing_customer.data[0][1]}</strong>
+                                        <strong>{billing_customer && billing_customer.data[0][1]}</strong>
                                     </div>
-                                    <div>Email: {billing_customer.data[0][3]}</div>
-                                    <div>Phone: {billing_customer.data[0][2]}</div>
+                                    <div>Email: {billing_customer && billing_customer.data[0][3]}</div>
+                                    <div>Phone: {billing_customer && billing_customer.data[0][2]}</div>
                                 </div>
                             </div>
                             <div className="table-responsive-sm">
@@ -130,11 +139,7 @@ class Invoice extends Component {
                         </button>
                         <button
                             onClick={() => {
-                                addCustomerBill(this.state)
-                                removeAllItemBill()
-                                setTimeout(() => {
-                                    this.props.history.push('/home')
-                                }, 300)
+                                this.handleClick()
                             }}
                             className='btn btn-primary mx-2'>
                             CONFIRM
@@ -166,7 +171,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         addCustomerBill: a => dispatch(addCustomerBill(a)),
-        removeAllItemBill: a => dispatch(removeAllItemBill(a))
+        remove: a => dispatch(remove(a))
     };
 };
 

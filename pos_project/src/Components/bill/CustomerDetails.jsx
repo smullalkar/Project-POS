@@ -24,7 +24,6 @@ class CustomerDetails extends Component {
         return (
             <div>
                 <form
-                    className='needs-validation'
                     onSubmit={(e) => {
                         e.preventDefault()
                         addCustomer(this.state)
@@ -37,7 +36,7 @@ class CustomerDetails extends Component {
                 >
                     <div className="row">
                         {/* <label>Customer name</label> */}
-                        <div className='col'>
+                        <div className='mt-3 col-12 col-sm-12 col-md-4 col-lg-3'>
                             <input
                                 required
                                 name='customer_name'
@@ -48,7 +47,7 @@ class CustomerDetails extends Component {
                                 placeholder='Customer Name'
                             />
                         </div>
-                        <div className='col'>
+                        <div className='mt-3 col-12 col-sm-12 col-md-4 col-lg-3'>
                             <input
                                 required
                                 name='contact'
@@ -59,7 +58,7 @@ class CustomerDetails extends Component {
                                 placeholder='Contact Number'
                             />
                         </div>
-                        <div className='col'>
+                        <div className='mt-3 col-12 col-sm-12 col-md-4 col-lg-3'>
                             <input
                                 required
                                 name='email'
@@ -70,7 +69,7 @@ class CustomerDetails extends Component {
                                 placeholder='E-mail'
                             />
                         </div>
-                        <div className='col'>
+                        <div className='mt-3 col-12 col-sm-12 col-md-4 col-lg-3'>
                             <button
                                 type="submit"
                                 className="btn btn-primary"

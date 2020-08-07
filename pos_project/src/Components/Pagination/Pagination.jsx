@@ -10,7 +10,7 @@ class Pagination extends Component {
 
         this.state = {
             curr_page: 1,
-            per_page: 2,
+            per_page: 10,
             user_id: ''
         }
     }
@@ -20,7 +20,7 @@ class Pagination extends Component {
         this.setState({
             user_id: id
         })
-        getCustomerData({user_id:id,curr_page:1,per_page:2})
+        getCustomerData({user_id:id,curr_page:1,per_page:10})
     }
 
     handlePagination = (p) => {
@@ -28,7 +28,7 @@ class Pagination extends Component {
         p = Number(p)
 
         if (p <= total_pages && p > 0)
-            getCustomerData({user_id:id,curr_page:p,per_page:2})
+            getCustomerData({user_id:id,curr_page:p,per_page:10})
 
         this.setState({
             curr_page: p

@@ -55,7 +55,8 @@ import {
     GETYEAR_SALES_SUCCESS,
     GETYEAR_SALES_FAIL,
     CHANGE_PAGE_NO,
-    CHANGE_PERPAGE_NO
+    CHANGE_PERPAGE_NO,
+    REMOVE
 } from "./Actiontypes";
 
 import axios from 'axios'
@@ -84,6 +85,12 @@ export const removeAllItemBill = payload => ({
     type: REMOVE_ALLITEM_BILL,
     payload: payload
 })
+
+export const remove = payload => ({
+    type: REMOVE,
+    payload: payload || ''
+})
+
 
 export const logUserReq = payload => ({
     type: LOGIN_USER_REQ,
@@ -362,7 +369,7 @@ export const getCustomerData = (payload) => {
     return dispatch => {
         dispatch(getCustomerReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/customer`,{
+            .get(`http://127.0.0.1:5000/user/customer`, {
                 params: {
                     user_id: Number(payload.user_id),
                     page: Number(payload.curr_page),
@@ -601,27 +608,30 @@ export const getMonthlySales = (payload) => {
 }
 
 function convert(str) {
-    let date = new Date(str);
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let dt = date.getDate();
+    let dt = new Date(str);
+    let dd = dt.getDate();
+    let mm = dt.getMonth() + 1;
+    let yyyy = dt.getFullYear();
 
-    if (dt < 10) {
-        dt = '0' + dt;
+    if (dd < 10) {
+        dd = '0' + dd;
     }
-    if (month < 10) {
-        month = '0' + month;
+    if (mm < 10) {
+        mm = '0' + mm;
     }
-    return (year + '-' + month + '-' + dt).toString()
+    return yyyy + '-' + mm + '-' + dd;
+
+
 }
 
 export const getAllSales = (payload) => {
     return dispatch => {
         dispatch(getAllSalesReq());
-        let date_payload = convert(payload)
+        let date_payload = convert(payload.sendDate)
         console.log('date payload ', date_payload)
+        console.log('date payload 2', payload)
         return axios
-            .get(`http://127.0.0.1:5000/user/allsales/${payload.user_id}/${date_payload.sendData}`)
+            .get(`http://127.0.0.1:5000/user/allsales/${payload.user_id}/${date_payload}`)
             .then(res => {
                 return dispatch(getAllSalesSuccess(res));
             })

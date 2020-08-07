@@ -24,9 +24,9 @@ class Register extends Component {
     render() {
         const { registerUser } = this.props
         return (
-            <div className='p-5 m-5'>
+            <div className='p-lg-5 p-md-5 p-sm-5 p-5 m-lg-5 m-md-3 m-sm-1 m-1'>
                 <form
-                    className='col-4 offset-4 needs-validation' 
+                    className='col-lg-4 col-md-6 col-sm-8 col-12 offset-lg-4 offset-md-3 offset-sm-2 offset-0 needs-validation' 
                     onSubmit={(e) => {
                         e.preventDefault()
                         registerUser(this.state)

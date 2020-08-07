@@ -28,26 +28,28 @@ class ItemSelect extends Component {
         return (
             <div>
                 <div className='row'>
-                    <div className='col-8'>
+                    <div className='mt-3 col-12 col-sm-12 col-md-6 col-lg-8'>
                         <label>SELECT ITEM : </label>
                         <Select
+                            className='mt-3'
                             options={opt}
                             placeholder='Please select an item'
                             onChange={(opt) => this.setState({ stock_id: opt.value })}
                         >
                         </Select>
                     </div>
-                    <div className='col-4'>
+                    <div className='mt-3 col-12 col-sm-12 col-md-6 col-lg-4'>
                         <label>ENTER QTY : </label>
                         <br />
                         <input
+                            className='col-12 col-sm-12 col-md-6 col-lg-6'
                             name='qty'
                             placeholder='Enter qty'
                             value={Number(this.state.qty)}
                             onChange={this.handleChange}
                         ></input>
                         <button
-                            className='btn btn-primary mx-3'
+                            className='col-12 col-sm-12 col-md-4 col-lg-4 btn btn-primary m-lg-3 m-md-3 mt-sm-3 mt-3'
                             onClick={() =>
                                 (
                                     addItemToBill(this.state),
