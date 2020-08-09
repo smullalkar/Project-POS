@@ -40,7 +40,7 @@ b. Invoice history of a customer.
 <p> <img src  = "/pos_project/public/invoice_from_customer.png"> </p>
 
 5. User can generate invoice or bills for the customers visited to his outlet.
-<p> <img src  = "/pos_project/public/billgenrator.png"> </p>
+<p> <img src  = "/pos_project/public/billgenerator.png"> </p>
 
 6. Invoice after confirmation.
 <p> <img src  = "/pos_project/public/invoice.png"> </p>
