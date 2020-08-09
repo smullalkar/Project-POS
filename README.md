@@ -52,7 +52,7 @@ b. Invoice history of a customer.
 
 ### Client
 
-1.   Clone the payment management system repo to your home directory and run below commands one by one.
+1.   Clone the repo to your home directory and run below commands one by one.
 
 2.   npm install react-bootstrap bootstrap
 
