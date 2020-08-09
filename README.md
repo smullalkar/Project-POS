@@ -1,4 +1,4 @@
-This project was created  with  React[Create React App](https://github.com/facebook/create-react-app),
+This project was created  with  React [Create React App](https://github.com/facebook/create-react-app),
 Flask in the backend and MySQL for storing the data.
 
 
