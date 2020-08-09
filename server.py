@@ -126,7 +126,7 @@ def user_customers():
     prev_page_end = (curr_page-1) * per_page
     curr_page_end = curr_page * per_page
     curr_page_items = data[prev_page_end:curr_page_end]
-    return json.dumps({'data':curr_page_items,'total_pages':total_pages, 'curr_page':curr_page},default=str)
+    return json.dumps({'data':curr_page_items,'total_pages':total_pages+1, 'curr_page':curr_page},default=str)
 
 # sending suppliers data
 @app.route('/user/supplier/<user_email>')
