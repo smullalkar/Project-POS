@@ -29,7 +29,7 @@ a. Supplier database.
 <p> <img src  = "/pos_project/public/suppliers.png"> </p>
 
 b. Add a supplier.
-<p> <img src  = "/pos_project/public/supplier.png"> </p>
+<p> <img src  = "/pos_project/public/addsupplier.png"> </p>
 
 4. Customer's management.
 
