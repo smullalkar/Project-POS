@@ -356,7 +356,7 @@ export const geInventorytData = (payload) => {
     return dispatch => {
         dispatch(getInventoryReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/inventory/${payload}`)
+            .get(`posbackend.smullalkar.tech/user/inventory/${payload}`)
             .then(res => {
                 return dispatch(getInventorySuccess(res));
             })
@@ -369,7 +369,7 @@ export const getCustomerData = (payload) => {
     return dispatch => {
         dispatch(getCustomerReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/customer`, {
+            .get(`posbackend.smullalkar.tech/user/customer`, {
                 params: {
                     user_id: Number(payload.user_id),
                     page: Number(payload.curr_page),
@@ -387,7 +387,7 @@ export const getSupplierData = (payload) => {
     return dispatch => {
         dispatch(getSupplierReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/supplier/${payload}`)
+            .get(`posbackend.smullalkar.tech/user/supplier/${payload}`)
             .then(res => {
                 return dispatch(getSupplierSuccess(res));
             })
@@ -400,7 +400,7 @@ export const registerUser = (payload) => {
     return dispatch => {
         dispatch(regUserReq());
         return axios
-            .post(`http://127.0.0.1:5000/user/register`,
+            .post(`posbackend.smullalkar.tech/user/register`,
                 {
                     organisation: payload.organisation,
                     address: payload.address,
@@ -419,12 +419,12 @@ export const registerUser = (payload) => {
 export const loginUser = (payload) => dispatch => {
     console.log('login details', payload)
     dispatch(logUserReq(payload))
-    return axios.post("http://127.0.0.1:5000/user/login", {
+    return axios.post("posbackend.smullalkar.tech/user/login", {
         email: payload.email,
         password: payload.password
     })
         .then(res => res.data?.auth_token)
-        .then(res => axios.post("http://127.0.0.1:5000/auth_check", {
+        .then(res => axios.post("posbackend.smullalkar.tech/auth_check", {
             auth_token: res
         }))
         .then(res => dispatch(logUserSuccess(res)))
@@ -436,7 +436,7 @@ export const addItemToStock = (payload) => {
     return dispatch => {
         dispatch(addItemToStockReq());
         return axios
-            .post(`http://127.0.0.1:5000/user/stock/add`,
+            .post(`posbackend.smullalkar.tech/user/stock/add`,
                 {
                     item_name: payload.item_name,
                     ppu: Number(payload.ppu),
@@ -459,7 +459,7 @@ export const addSupplier = (payload) => {
     return dispatch => {
         dispatch(addSupplierReq());
         return axios
-            .post(`http://127.0.0.1:5000/user/supplier/add`,
+            .post(`posbackend.smullalkar.tech/user/supplier/add`,
                 {
                     name: payload.name,
                     address: payload.address,
@@ -479,7 +479,7 @@ export const deleteSupplier = (payload) => {
     return dispatch => {
         dispatch(deleteSupplierReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/supplier/delete/${payload}`)
+            .get(`posbackend.smullalkar.tech/user/supplier/delete/${payload}`)
             .then(res => {
                 return dispatch(deleteSupplierSuccess(res));
             })
@@ -492,7 +492,7 @@ export const deleteStock = (payload) => {
     return dispatch => {
         dispatch(deleteStockReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/stock/delete/${payload}`)
+            .get(`posbackend.smullalkar.tech/user/stock/delete/${payload}`)
             .then(res => {
                 return dispatch(deleteStockSuccess(res));
             })
@@ -505,7 +505,7 @@ export const editStock = (payload) => {
     return dispatch => {
         dispatch(editStockReq());
         return axios
-            .post(`http://127.0.0.1:5000/user/stock/edit/${payload.stock_id}`,
+            .post(`posbackend.smullalkar.tech/user/stock/edit/${payload.stock_id}`,
                 {
                     item_name: payload.item_name,
                     ppu: payload.ppu,
@@ -529,7 +529,7 @@ export const editSupplier = (payload) => {
     return dispatch => {
         dispatch(editSupplierReq());
         return axios
-            .post(`http://127.0.0.1:5000/user/supplier/edit/${payload.supplier_id}`,
+            .post(`posbackend.smullalkar.tech/user/supplier/edit/${payload.supplier_id}`,
                 {
                     name: payload.name,
                     address: payload.address,
@@ -549,7 +549,7 @@ export const addCustomer = (payload) => {
     return dispatch => {
         dispatch(addCustomerReq());
         return axios
-            .post(`http://127.0.0.1:5000/customer/add`,
+            .post(`posbackend.smullalkar.tech/customer/add`,
                 {
                     customer_name: payload.customer_name,
                     contact: payload.contact,
@@ -568,7 +568,7 @@ export const addCustomerBill = (payload) => {
     return dispatch => {
         dispatch(addCustomerBillReq());
         return axios
-            .post(`http://127.0.0.1:5000/customer/add/bill`,
+            .post(`posbackend.smullalkar.tech/customer/add/bill`,
                 {
                     customer_id: Number(payload.customer_id),
                     stockitems_and_qty: payload.stockitems_and_qty,
@@ -587,7 +587,7 @@ export const getCustomerBill = (payload) => {
     return dispatch => {
         dispatch(getCustomerBillReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/customer/bill/${payload}`)
+            .get(`posbackend.smullalkar.tech/user/customer/bill/${payload}`)
             .then(res => {
                 return dispatch(getCustomerBillSuccess(res));
             })
@@ -599,7 +599,7 @@ export const getMonthlySales = (payload) => {
     return dispatch => {
         dispatch(getMonthlySalesReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/monthlysales/${payload.user_id}/${payload.month_selected}/${payload.year_selected}`)
+            .get(`posbackend.smullalkar.tech/user/monthlysales/${payload.user_id}/${payload.month_selected}/${payload.year_selected}`)
             .then(res => {
                 return dispatch(getMonthlySalesSuccess(res));
             })
@@ -631,7 +631,7 @@ export const getAllSales = (payload) => {
         console.log('date payload ', date_payload)
         console.log('date payload 2', payload)
         return axios
-            .get(`http://127.0.0.1:5000/user/allsales/${payload.user_id}/${date_payload}`)
+            .get(`posbackend.smullalkar.tech/user/allsales/${payload.user_id}/${date_payload}`)
             .then(res => {
                 return dispatch(getAllSalesSuccess(res));
             })
@@ -643,7 +643,7 @@ export const getYearSales = (payload) => {
     return dispatch => {
         dispatch(getYearSalesReq());
         return axios
-            .get(`http://127.0.0.1:5000/user/yearsales/${payload.user_id}/${payload.year_selected}`)
+            .get(`posbackend.smullalkar.tech/user/yearsales/${payload.user_id}/${payload.year_selected}`)
             .then(res => {
                 return dispatch(getYearSalesSuccess(res));
             })
