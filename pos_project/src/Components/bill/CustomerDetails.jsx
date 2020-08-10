@@ -38,7 +38,6 @@ class CustomerDetails extends Component {
                         {/* <label>Customer name</label> */}
                         <div className='mt-3 col-12 col-sm-12 col-md-4 col-lg-3'>
                             <input
-                                required
                                 name='customer_name'
                                 value={this.state.customer_name}
                                 onChange={this.handleChange}
@@ -49,7 +48,6 @@ class CustomerDetails extends Component {
                         </div>
                         <div className='mt-3 col-12 col-sm-12 col-md-4 col-lg-3'>
                             <input
-                                required
                                 name='contact'
                                 value={this.state.contact}
                                 onChange={this.handleChange}
@@ -60,7 +58,6 @@ class CustomerDetails extends Component {
                         </div>
                         <div className='mt-3 col-12 col-sm-12 col-md-4 col-lg-3'>
                             <input
-                                required
                                 name='email'
                                 value={this.state.email}
                                 onChange={this.handleChange}
