@@ -6,7 +6,7 @@ Flask in the backend and MySQL for storing the data.
 Project-POS is an end-to-end Point od sale B2B application where user can do supplier's management, customer's management and stock management.
 <br>
 <br>
-<a href =  "posproject.smullalkar.tech ">
+<a href =  "https://posproject.smullalkar.tech ">
   <button style = "background:red,padding:5px">Demo Link</button>
 </a>
 
