@@ -8,6 +8,14 @@ Project-POS is an end-to-end Point od sale B2B application where user can do sup
 <br>
 <a href =  "https://posproject.smullalkar.tech ">
   <button style = "background:red,padding:5px">Demo Link</button>
+  
+  credentials : 
+  
+  email : shazz@gmail.com
+  password : nopass123
+  
+  otherwise you can also register and start from the scratch.
+  
 </a>
 
 To get started and know better here is the list of the features build inside this application
